@@ -1,8 +1,10 @@
 package moonfather.workshop_for_handsome_adventurer.block_entities;
 
+import com.illusivesoulworks.polymorph.client.recipe.RecipesWidget;
 import moonfather.workshop_for_handsome_adventurer.OptionsHolder;
 import moonfather.workshop_for_handsome_adventurer.blocks.DualTableBaseBlock;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
+import moonfather.workshop_for_handsome_adventurer.integration.PolymorphAccessorClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -89,16 +91,18 @@ public class DualTableMenu extends SimpleTableMenu
 	{
 		if (container.equals(this.craftSlots))
 		{
+			this.setActiveResultSlotForPolymorph(1);
 			this.access.execute( (level, pos) ->
 			{
-				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots);
+				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots, DualTableMenu.RESULT_SLOT);
 			});
 		}
 		else if (container.equals(this.craftSlotsSecondary))
 		{
+			this.setActiveResultSlotForPolymorph(2);
 			this.access.execute( (level, pos) ->
 			{
-				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlotsSecondary, this.resultSlotsSecondary);
+				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlotsSecondary, this.resultSlotsSecondary, DualTableMenu.SECONDARY_RESULT_SLOT);
 			});
 		}
 		else
@@ -108,15 +112,25 @@ public class DualTableMenu extends SimpleTableMenu
 		}
 	}
 
+	public void handleCraftingUpdateRequest(int resultSlotIndex)
+	{
+		// handles client-to-server message as a result of a click in polymorph widget.
+		this.slotsChanged(resultSlotIndex != SECONDARY_RESULT_SLOT ? this.craftSlots : this.craftSlotsSecondary);
+	}
+
+
 
 	public int getRecipeTargetGrid()
 	{
 		return this.DataSlots.getSlotValue(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET);
 	}
 
-	public void registerClientHandlerForRecipeTargetChange(Consumer<Integer> event)
+	public void registerClientHandlerForRecipeTargetChange(Consumer<Integer> eventForJEI)
 	{
-		this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, event);
+		// first, a handler for JEI; done in screen class.
+		this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, eventForJEI);
+		// second, support for polymorph.
+		this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_POLYMORPH_TARGET, this::recipeTargetChangeHandler);
 	}
 
 	public void changeRecipeTargetGridTo(int grid)
@@ -128,6 +142,22 @@ public class DualTableMenu extends SimpleTableMenu
 		}
 	}
 
+	private void recipeTargetChangeHandler(Integer value)
+	{
+		// client-side handler for polymorph: we need to set the result slot
+		RecipesWidget.get().ifPresent(
+			(widget) -> {
+				Slot slot = this.getSlot(DualTableMenu.RESULT_SLOT);
+				if (value == 2)
+				{
+					slot = this.getSlot(DualTableMenu.SECONDARY_RESULT_SLOT);
+				}
+				PolymorphAccessorClient.setTargetSlot(widget, slot);
+			}
+		);
+	}
+
+	/////////////////////////////////////////////
 
 	@Override
 	protected void clearAdditional() {
@@ -183,7 +213,8 @@ public class DualTableMenu extends SimpleTableMenu
 	}
 
 	@Override
-	protected void storeDataValues(Level level, BlockPos pos) {
+	protected void storeDataValues(Level level, BlockPos pos)
+	{
 		DualTableBlockEntity be = (DualTableBlockEntity) level.getBlockEntity(pos);
 		if (be != null)
 		{
@@ -205,9 +236,11 @@ public class DualTableMenu extends SimpleTableMenu
 		public int get() { return this.value; }
 
 		@Override
-		public void set(int v) {
+		public void set(int v)
+		{
 			this.value = v;
-			if (event != null) {
+			if (event != null)
+			{
 				event.accept(v);
 			}
 		}

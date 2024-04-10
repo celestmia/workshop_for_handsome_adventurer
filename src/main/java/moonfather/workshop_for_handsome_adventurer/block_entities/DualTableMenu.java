@@ -1,6 +1,5 @@
 package moonfather.workshop_for_handsome_adventurer.block_entities;
 
-import com.illusivesoulworks.polymorph.client.recipe.RecipesWidget;
 import moonfather.workshop_for_handsome_adventurer.OptionsHolder;
 import moonfather.workshop_for_handsome_adventurer.blocks.DualTableBaseBlock;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -145,16 +145,15 @@ public class DualTableMenu extends SimpleTableMenu
 	private void recipeTargetChangeHandler(Integer value)
 	{
 		// client-side handler for polymorph: we need to set the result slot
-		RecipesWidget.get().ifPresent(
-			(widget) -> {
-				Slot slot = this.getSlot(DualTableMenu.RESULT_SLOT);
-				if (value == 2)
-				{
-					slot = this.getSlot(DualTableMenu.SECONDARY_RESULT_SLOT);
-				}
-				PolymorphAccessorClient.setTargetSlot(widget, slot);
+		if (ModList.get().isLoaded("polymorph"))
+		{
+			Slot slot = this.getSlot(DualTableMenu.RESULT_SLOT);
+			if (value == 2)
+			{
+				slot = this.getSlot(DualTableMenu.SECONDARY_RESULT_SLOT);
 			}
-		);
+			PolymorphAccessorClient.setTargetSlot(slot);
+		}
 	}
 
 	/////////////////////////////////////////////

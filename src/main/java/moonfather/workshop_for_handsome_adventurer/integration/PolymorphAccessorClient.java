@@ -1,28 +1,27 @@
 package moonfather.workshop_for_handsome_adventurer.integration;
 
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
-import com.illusivesoulworks.polymorph.api.client.base.IRecipesWidget;
-import com.illusivesoulworks.polymorph.api.common.base.IPolymorphCommon;
+import com.illusivesoulworks.polymorph.client.recipe.RecipesWidget;
 import com.illusivesoulworks.polymorph.client.recipe.widget.PlayerRecipesWidget;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMenu;
 import moonfather.workshop_for_handsome_adventurer.block_entities.messaging.PacketSender;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screens.SimpleTableCraftingScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class PolymorphAccessorClient
 {
-    public static void setTargetSlot(IRecipesWidget widget, Slot slot)
+    public static void setTargetSlot(Slot slot)
     {
-        if (widget instanceof PolymorphAccessorClient.OurPlayerRecipesWidget ourWidget)
-        {
-            ourWidget.setDestinationSlot(slot);
-        }
+        RecipesWidget.get().ifPresent(
+            (widget) -> {
+                if (widget instanceof PolymorphAccessorClient.OurPlayerRecipesWidget ourWidget)
+                {
+                    ourWidget.setDestinationSlot(slot);
+                }
+            }
+        );
     }
 
     public static void register()

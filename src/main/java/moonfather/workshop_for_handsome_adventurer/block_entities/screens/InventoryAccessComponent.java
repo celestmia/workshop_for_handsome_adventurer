@@ -2,22 +2,22 @@ package moonfather.workshop_for_handsome_adventurer.block_entities.screens;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableDataSlots;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMenu;
 import moonfather.workshop_for_handsome_adventurer.block_entities.messaging.PacketSender;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screen_components.SimpleButton;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screen_components.SlightlyNicerEditBox;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -59,12 +59,20 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
         if (this.visible)
         {
             this.initVisuals();
+            this.hideIfScreenTooNarrow();
         }
         this.parent.getMenu().registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_TABS_NEED_UPDATE, this::onTabListChangedOnServer);
         this.parent.getMenu().registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_UPPER_CONTAINER_TRUE_SIZE, this::onContainerSizeChangedOnServer);
     }
 
-
+    private void hideIfScreenTooNarrow()
+    {
+        // sane condition is   this.isVisibleAccordingToMenuData() != this.isVisibleTotal()
+        // ...and that will work on resize but not on first start; both are false first time.
+        // ...instead of accounting for that, i'll just go unconditionally.
+        this.parent.getMenu().setClientFlagScreenTooNarrow(this.widthTooNarrow2);
+        this.parent.getMenu().updateAccessSlotsOnClient();
+    }
 
     public void initVisuals()
     {
@@ -159,7 +167,7 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
 
 
 
-    private void onContainerSizeChangedOnServer(Integer value) {  }
+    private void onContainerSizeChangedOnServer(Integer value) {    }
 
     public boolean areSlotRowsFourToSixVisible() { return this.slotRowsFourToSixVisible; }
 
@@ -278,6 +286,7 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
         if (changeTab) {
             this.tabChanged(this.tabButtons.get(0), true); // just to update visuals
         }
+        this.hideIfScreenTooNarrow();
     }
 
     public void tick()
@@ -325,8 +334,6 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
     }
 
     ////////////////////////////////////////
-
-    private int lastInventoryAccessRange = 0;
 
     private void updateWidth(boolean widthTooNarrow) {
         if (this.widthTooNarrow2 != widthTooNarrow) {

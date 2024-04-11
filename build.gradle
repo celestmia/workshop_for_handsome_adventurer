@@ -176,10 +176,10 @@ dependencies {
 
 	compileOnly fg.deobf("curse.maven:jei-238222:4585879")
     compileOnly fg.deobf("curse.maven:jade-324717:4573193")
-    compileOnly fg.deobf("curse.maven:the-one-probe-245211:4629624")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:4629624")
 
-    runtimeOnly fg.deobf("curse.maven:badpackets-615134:4784395")
-    implementation fg.deobf("curse.maven:wthit-forge-455982:4727741")
+    //runtimeOnly fg.deobf("curse.maven:badpackets-615134:4784395")
+    compileOnly fg.deobf("curse.maven:wthit-forge-455982:4727741")
 
 
     // runtimeOnly fg.deobf("curse.maven:carry-on-274259:4628675")
@@ -189,7 +189,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:crafting-tweaks-233071:4757229")
 
     compileOnly fg.deobf("curse.maven:dynamic-asset-generator-577096:4670363")       //!//
-	runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:4617259")
+	//runtimeOnly fg.deobf("curse.maven:biomes-o-plenty-220318:4617259")
 	runtimeOnly fg.deobf("curse.maven:terrablender-563928:4647094")
     runtimeOnly fg.deobf("curse.maven:regions-unexplored-659110:4779426")
     //runtimeOnly fg.deobf("curse.maven:growthcraft-community-edition-235092:4844338")
@@ -199,7 +199,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:cloth-config-348521:4633444")  //implementation
 	
 	//implementation fg.deobf("curse.maven:emi-580555:4806904")
-    implementation fg.deobf("maven.modrinth:emi:ShejnJfY")  //compileOnly
+    compileOnly fg.deobf("maven.modrinth:emi:ShejnJfY")  //compileOnly
     implementation fg.deobf("maven.modrinth:curios:opCpnbhi")
 
     compileOnly fg.deobf("maven.modrinth:travelersbackpack:xocqrLoW")
@@ -207,11 +207,12 @@ dependencies {
 	compileOnly fg.deobf("curse.maven:tetra-289712:4857842")
 	//runtimeOnly fg.deobf("curse.maven:mutil-351914:4824501")
 
-    runtimeOnly fg.deobf("curse.maven:lets-do-herbal-brews-951221:4994262")
-    runtimeOnly fg.deobf("curse.maven:do-api-864599:4833128")
-    runtimeOnly fg.deobf("curse.maven:welcome-to-meadow-821483:4871109")
+    //runtimeOnly fg.deobf("curse.maven:lets-do-herbal-brews-951221:4994262")
+    //runtimeOnly fg.deobf("curse.maven:do-api-864599:4833128")
+    //runtimeOnly fg.deobf("curse.maven:welcome-to-meadow-821483:4871109")
+    //runtimeOnly fg.deobf("curse.maven:vinery-704465:4932395")
+
     //!//runtimeOnly fg.deobf("curse.maven:beachparty-858691:4984446")
-    runtimeOnly fg.deobf("curse.maven:vinery-704465:4932395")
     //!//runtimeOnly fg.deobf("curse.maven:aether-255308:4976547")
     //!//runtimeOnly fg.deobf("curse.maven:growthcraft-community-edition-235092:4844338")
 

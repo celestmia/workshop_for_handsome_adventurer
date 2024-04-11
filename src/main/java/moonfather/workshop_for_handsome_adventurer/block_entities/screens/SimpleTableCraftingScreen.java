@@ -1,7 +1,5 @@
 package moonfather.workshop_for_handsome_adventurer.block_entities.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moonfather.workshop_for_handsome_adventurer.Constants;
 import moonfather.workshop_for_handsome_adventurer.OptionsHolder;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMenu;
@@ -9,7 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -26,7 +23,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE;
 
@@ -38,11 +34,11 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	private final InventoryAccessComponent inventoryComponent = new InventoryAccessComponent();
 	protected int renderLeftPos;
 
-	public SimpleTableCraftingScreen(SimpleTableMenu p_98448_, Inventory p_98449_, Component p_98450_) {
-		super(p_98448_, p_98449_, p_98450_);
-	}
+	// constructor; nothing here.
+	public SimpleTableCraftingScreen(SimpleTableMenu p_98448_, Inventory p_98449_, Component p_98450_) { super(p_98448_, p_98449_, p_98450_); }
 
-	protected void init() {
+	protected void init()
+	{
 		super.init();
 		this.inventoryComponent.init(this, this.width < 400);
 		this.setPositionsX();
@@ -59,7 +55,8 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	}
 
 	@Override
-	public int getXSize() {
+	public int getXSize()
+	{
 		int leftPanel = this.inventoryComponent.getWidth();
 		return imageWidth + leftPanel + (leftPanel > 0 ? 2 : 0);
 	}

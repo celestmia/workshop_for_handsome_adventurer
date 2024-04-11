@@ -18,6 +18,8 @@ public class PacketSender
             PROTOCOL_VERSION::equals
     );
 
+
+
     public static void sendTabChangeToServer(int newTab)
     {
         TabChangeMessage message = new TabChangeMessage(newTab);
@@ -53,7 +55,10 @@ public class PacketSender
         // tells the server to update the crafting result slot because a recipe was chosen in polymorph widget.
     }
 
-    public static void registerMessage() {
+    
+
+    public static void registerMessage()
+    {
         CHANNEL_INSTANCE.registerMessage(discriminator++, TabChangeMessage.class, TabChangeMessage::encode, TabChangeMessage::decode, PacketHandler::handleTabChange, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL_INSTANCE.registerMessage(discriminator++, GridChangeMessage.class, GridChangeMessage::encode, GridChangeMessage::decode, PacketHandler::handleGridChange, Optional.of(NetworkDirection.PLAY_TO_SERVER));
         CHANNEL_INSTANCE.registerMessage(discriminator++, ChestRenameMessage.class, ChestRenameMessage::encode, ChestRenameMessage::decode, PacketHandler::handleChestRename, Optional.of(NetworkDirection.PLAY_TO_SERVER));

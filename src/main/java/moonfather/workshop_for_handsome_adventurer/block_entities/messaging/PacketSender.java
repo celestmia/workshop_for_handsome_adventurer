@@ -55,7 +55,7 @@ public class PacketSender
         // tells the server to update the crafting result slot because a recipe was chosen in polymorph widget.
     }
 
-    
+
 
     public static void registerMessage()
     {

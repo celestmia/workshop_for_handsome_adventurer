@@ -198,14 +198,14 @@ dependencies {
 	runtimeOnly fg.deobf("curse.maven:architectury-api-419699:4663010")
     compileOnly fg.deobf("curse.maven:cloth-config-348521:4633444")  //implementation
 	
-	//implementation fg.deobf("curse.maven:emi-580555:4806904")
-    compileOnly fg.deobf("maven.modrinth:emi:ShejnJfY")  //compileOnly
+	implementation fg.deobf("maven.modrinth:emi:ShejnJfY")  //compileOnly
     implementation fg.deobf("maven.modrinth:curios:opCpnbhi")
 
     compileOnly fg.deobf("maven.modrinth:travelersbackpack:xocqrLoW")
-	
-	compileOnly fg.deobf("curse.maven:tetra-289712:4857842")
-	//runtimeOnly fg.deobf("curse.maven:mutil-351914:4824501")
+
+    implementation fg.deobf("curse.maven:tetra-289712:4857842")
+	runtimeOnly fg.deobf("curse.maven:mutil-351914:4824501")
+    runtimeOnly fg.deobf("curse.maven:tetra-tables-looking-neat-954341:5225383")
 
     //runtimeOnly fg.deobf("curse.maven:lets-do-herbal-brews-951221:4994262")
     //runtimeOnly fg.deobf("curse.maven:do-api-864599:4833128")
@@ -218,6 +218,7 @@ dependencies {
 
     //!//runtimeOnly fg.deobf("curse.maven:selene-499980:5025566")
     //!//runtimeOnly fg.deobf("curse.maven:every-compat-628539:5038746")
+
     compileOnly fg.deobf("curse.maven:polymorph-388800:5222033")
 }
 

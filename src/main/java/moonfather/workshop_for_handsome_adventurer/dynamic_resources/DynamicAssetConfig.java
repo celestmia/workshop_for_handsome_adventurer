@@ -43,6 +43,7 @@ public class DynamicAssetConfig
                 }
                 catch (IOException ignored)
                 {
+                    //readingFailed = true; this would cause overwrites on error. not sure if i want that.
                 }
             }
             if (common == null)
@@ -110,7 +111,17 @@ public class DynamicAssetConfig
 
     public static String getLogRecipeSubstitution(String wood)
     {
-        return getFromSplitConfig(getCommon().stripped_log_substitution_list_for_recipes, subRecipeList, wood);
+        String input;
+        if (subRecipeList.isEmpty())
+        {
+            input = "crimson=minecraft:stripped_crimson_stem, warped=minecraft:stripped_warped_stem, " + getCommon().stripped_log_substitution_list_for_recipes;
+        }
+        else
+        {
+            input = "";
+        }
+        // cheaty way of adding new defaults without needing to delete config
+        return getFromSplitConfig(input, subRecipeList, wood);
     }
     public static String getLogTexSubstitution(String wood)
     {
@@ -209,7 +220,7 @@ public class DynamicAssetConfig
         public String blacklist = "vinery:cherry";
 
         public String stripped_log_substitution_comment = "For wood types that do not have stripped logs, you can specify table top block here. If you do not, we are skipping that wood type.";
-        public String stripped_log_substitution_list_for_recipes = "bamboo=minecraft:smooth_stone, treated_wood_horizontal=minecraft:polished_blackstone,  embur=byg:stripped_embur_pedu,  sythian=byg:stripped_sythian_stem, bulbis=minecraft:smooth_stone";
+        public String stripped_log_substitution_list_for_recipes = "bamboo=minecraft:smooth_stone, treated_wood_horizontal=minecraft:polished_blackstone,  embur=byg:stripped_embur_pedu,  sythian=byg:stripped_sythian_stem, bulbis=minecraft:smooth_stone, crimson=minecraft:stripped_crimson_stem, warped=minecraft:stripped_warped_stem";
 
         public String blocks_with_dumbass_names_comment = "This is a list of blocks that do not follow usual naming scheme. Set consists of planks, slab and log, separated by slashes. Separate all sets with comma. You can use stripped_log_substitution for these. Example is IE's treated wood as it has no logs.";
         public String blocks_with_dumbass_names = "immersiveengineering:treated_wood_horizontal/slab_treated_wood_horizontal/no_log_for_this_one, growthcraft_apples:apple_plank/apple_plank_slab/apple_wood_log_stripped,   vinery:cherry_planks/cherry_slab/stripped_cherry_log";

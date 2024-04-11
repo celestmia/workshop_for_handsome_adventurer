@@ -3,6 +3,7 @@ package moonfather.workshop_for_handsome_adventurer.block_entities;
 import moonfather.workshop_for_handsome_adventurer.OptionsHolder;
 import moonfather.workshop_for_handsome_adventurer.blocks.DualTableBaseBlock;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
+import moonfather.workshop_for_handsome_adventurer.integration.PolymorphAccessorClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -99,16 +101,18 @@ public class DualTableMenu extends SimpleTableMenu
     {
         if (container.equals(this.craftSlots))
         {
+            this.setActiveResultSlotForPolymorph(1);
             this.access.execute((level, pos) ->
             {
-                slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots);
+                slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots, DualTableMenu.RESULT_SLOT);
             });
         }
         else if (container.equals(this.craftSlotsSecondary))
         {
+            this.setActiveResultSlotForPolymorph(2);
             this.access.execute((level, pos) ->
             {
-                slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlotsSecondary, this.resultSlotsSecondary);
+                slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlotsSecondary, this.resultSlotsSecondary, DualTableMenu.SECONDARY_RESULT_SLOT);
             });
         }
         else
@@ -118,22 +122,49 @@ public class DualTableMenu extends SimpleTableMenu
         }
     }
 
+    @Override
+    public void handleCraftingUpdateRequest(int resultSlotIndex)
+    {
+        // handles client-to-server message as a result of a click in polymorph widget.
+        this.slotsChanged(resultSlotIndex != SECONDARY_RESULT_SLOT ? this.craftSlots : this.craftSlotsSecondary);
+    }
+
+
+
     public int getRecipeTargetGrid()
     {
         return this.DataSlots.getSlotValue(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET);
     }
 
-    public void registerClientHandlerForRecipeTargetChange(Consumer<Integer> event)
+    public void registerClientHandlerForRecipeTargetChange(Consumer<Integer> eventForJEI)
     {
-        this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, event);
+        // first, a handler for JEI; done in screen class.
+        this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, eventForJEI);
+        // second, support for polymorph.
+        this.DataSlots.registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_POLYMORPH_TARGET, this::recipeTargetChangeHandler);
     }
 
     public void changeRecipeTargetGridTo(int grid)
     {
+        // jei support
         if (grid >= 1 && grid <= 2)
         {
             this.DataSlots.setSlotValue(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, grid);
             this.synchronizeDataSlotToRemote(SimpleTableDataSlots.DATA_SLOT_JEI_RECIPE_TARGET, grid);
+        }
+    }
+
+    private void recipeTargetChangeHandler(Integer value)
+    {
+        // client-side handler for polymorph: we need to set the result slot
+        if (ModList.get().isLoaded("polymorph"))
+        {
+            Slot slot = this.getSlot(DualTableMenu.RESULT_SLOT);
+            if (value == 2)
+            {
+                slot = this.getSlot(DualTableMenu.SECONDARY_RESULT_SLOT);
+            }
+            PolymorphAccessorClient.setTargetSlot(slot);
         }
     }
 

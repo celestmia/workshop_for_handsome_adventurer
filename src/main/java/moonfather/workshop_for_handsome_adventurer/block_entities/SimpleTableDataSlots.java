@@ -12,7 +12,8 @@ public class SimpleTableDataSlots
     public static final int DATA_SLOT_SLOTS_00_TO_26_EXCESS = 3; // this one isn't a flag, it's a value.
     public static final int DATA_SLOT_SLOTS_27_TO_53_EXCESS = 4; // this one isn't a flag, it's a value.
     public static final int DATA_SLOT_JEI_RECIPE_TARGET = 5; // two values but not a flag; dual table only but added to both.
-    private static final int COUNT = 6;
+    public static final int DATA_SLOT_POLYMORPH_TARGET = 6; // 1 is lower grid, 2 is upper; dual table only but added to both.
+    private static final int COUNT = 7;
 
     /////////////  instance  //////////////////////////
 

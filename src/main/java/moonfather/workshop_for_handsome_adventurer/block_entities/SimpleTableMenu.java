@@ -9,6 +9,7 @@ import moonfather.workshop_for_handsome_adventurer.block_entities.messaging.Pack
 import moonfather.workshop_for_handsome_adventurer.blocks.AdvancedTableBottomPrimary;
 import moonfather.workshop_for_handsome_adventurer.blocks.SimpleTable;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
+import moonfather.workshop_for_handsome_adventurer.integration.PolymorphAccessorServer;
 import moonfather.workshop_for_handsome_adventurer.integration.TetraBeltSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -152,13 +154,25 @@ public class SimpleTableMenu extends AbstractContainerMenu
 	public int getCustomizationSlotCount()	{ return OptionsHolder.COMMON.SimpleTableNumberOfSlots.get(); }
 
 
-	protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, BlockPos tablePos, Player player, CraftingContainer craftingContainer, ResultContainer resultContainer)
+	protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level level, BlockPos tablePos, Player player, CraftingContainer craftingContainer, ResultContainer resultContainer, int resultSlotIndex)
 	{
 		if (! level.isClientSide)
 		{
+			if (resultSlotIndex >= menu.slots.size())
+			{
+				return; // dual table not yet initialized
+			}
+			Optional<CraftingRecipe> optional;
+			if (ModList.get().isLoaded("polymorph"))
+			{
+				optional = PolymorphAccessorServer.getRecipe(menu, craftingContainer, level, player);
+			}
+			else
+			{
+				optional = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level);
+			}
 			ServerPlayer serverplayer = (ServerPlayer)player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			Optional<CraftingRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level);
 			if (optional.isPresent())
 			{
 				CraftingRecipe craftingrecipe = optional.get();
@@ -169,8 +183,8 @@ public class SimpleTableMenu extends AbstractContainerMenu
 			}
 
 			resultContainer.setItem(0, itemstack);
-			menu.setRemoteSlot(0, itemstack);
-			serverplayer.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.incrementStateId(), 0, itemstack));
+			menu.setRemoteSlot(resultSlotIndex, itemstack);
+			serverplayer.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.incrementStateId(), resultSlotIndex, itemstack));
 			BlockState blockState = level.getBlockState(tablePos);
 			level.sendBlockUpdated(tablePos, blockState, blockState, 2); // syncs inventory of client BE from sever BE. needed for renderer. all these months, until 1.09 client BE had item list what was read when loading level, and we were fine - menu would get fresh items and BE would stay oblivious.
 		}
@@ -180,15 +194,31 @@ public class SimpleTableMenu extends AbstractContainerMenu
 	{
 		if (isCraftingGrid(container))
 		{
+			// i could         this.setActiveResultSlotForPolymorph(1);   but there is no need
 			this.access.execute( (level, pos) ->
 			{
-				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots);
+				slotChangedCraftingGrid(this, level, pos, this.player, this.craftSlots, this.resultSlots, SimpleTableMenu.RESULT_SLOT);
 			});
 		}
 		else
 		{
 			// what container now?
 			// this doesn't trigger for SimpleContainer
+		}
+	}
+
+	public void handleCraftingUpdateRequest(int resultSlotIndex)
+	{
+		// handles client-to-server message as a result of a click in polymorph widget.
+		this.slotsChanged(this.craftSlots);
+	}
+
+	protected void setActiveResultSlotForPolymorph(int index)
+	{
+		// server to client message basically
+		if (this.player != null && ! this.player.level.isClientSide)
+		{
+			this.DataSlots.setSlotValue(SimpleTableDataSlots.DATA_SLOT_POLYMORPH_TARGET, index);
 		}
 	}
 

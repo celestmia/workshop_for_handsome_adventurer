@@ -244,7 +244,9 @@ dependencies {
     //implementation fg.deobf("maven.modrinth:the-one-probe:1.18-5.1.2")
 	runtimeOnly fg.deobf("curse.maven:terrablender-563928:3957976")
 	runtimeOnly fg.deobf("curse.maven:oh-the-biomes-youll-go-247560:3956521")
-    runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3964014")
+    //runtimeOnly fg.deobf("curse.maven:immersive-engineering-231951:3964014")
+	
+	implementation fg.deobf("curse.maven:polymorph-388800:5221832")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

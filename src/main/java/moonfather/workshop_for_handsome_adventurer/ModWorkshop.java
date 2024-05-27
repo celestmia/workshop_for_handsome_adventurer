@@ -5,6 +5,7 @@ import moonfather.workshop_for_handsome_adventurer.blocks.PotionShelf;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.DynamicAssetConfig;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.FinderEvents;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.SecondCreativeTab;
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.WoodTypeLister;
 import moonfather.workshop_for_handsome_adventurer.initialization.CommonSetup;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import moonfather.workshop_for_handsome_adventurer.integration.TOPRegistration;
@@ -48,13 +49,14 @@ public class ModWorkshop
     {
         for (String woodType: Registration.woodTypes)
         {
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_double_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_framed_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_pframed_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_left_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_right_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_left_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_right_" + woodType);
+            blacklistForCarryOn(woodType);
+        }
+        if (DynamicAssetConfig.masterLeverOn())
+        {
+            for (String woodType : WoodTypeLister.getWoodIds(true))
+            {
+                blacklistForCarryOn(woodType);
+            }
         }
         //System.out.println("test imc " + Constants.MODID + ":dual_table_bottom_left_" + "oak   " + ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Constants.MODID + ":dual_table_bottom_left_" + "oak")).getCloneItemStack(null, null, null, null, null));
         if (ModList.get().isLoaded("theoneprobe"))
@@ -62,6 +64,18 @@ public class ModWorkshop
             InterModComms.sendTo("theoneprobe", "getTheOneProbe", TOPRegistration::instance);
         }
     }
+    private static void blacklistForCarryOn(String woodType)
+    {
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_double_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_framed_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_pframed_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_left_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_right_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_left_" + woodType);
+        InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_right_" + woodType);
+    }
+
+
 
     //// tables/racks/shelves for 3rd party woods
     private void registerDynamicItems(final RegisterEvent event)

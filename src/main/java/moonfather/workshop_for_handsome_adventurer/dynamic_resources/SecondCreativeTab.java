@@ -1,6 +1,9 @@
 package moonfather.workshop_for_handsome_adventurer.dynamic_resources;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -34,6 +37,7 @@ public class SecondCreativeTab
                                  .icon( ()-> new ItemStack(SecondCreativeTab.items_table1.get(iconIndex)) )
                                  .title(Component.translatable("itemGroup.workshop_for_handsome_adventurer"))
                                  .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
+                                 .withTabsBefore(new ResourceLocation("workshop_for_handsome_adventurer:tab"))
                                  .build();
         }
         return tab;

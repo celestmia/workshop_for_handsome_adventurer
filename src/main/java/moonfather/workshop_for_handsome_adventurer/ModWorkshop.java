@@ -89,7 +89,7 @@ public class ModWorkshop
         }
         if (event.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB))
         {
-            if (DynamicAssetConfig.masterLeverOn() /*&& DynamicAssetConfig.separateCreativeTab()*/)
+            if (DynamicAssetConfig.masterLeverOn() && DynamicAssetConfig.separateCreativeTab())
             {
                 event.register(Registries.CREATIVE_MODE_TAB, new ResourceLocation(Constants.MODID, "tab2"), SecondCreativeTab::getTab);
             }

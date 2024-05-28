@@ -62,9 +62,12 @@ public class ModWorkshop
         {
             blacklistForCarryOn(woodType);
         }
-        for (String woodType: WoodTypeLister.getWoodIds(true))
+        if (DynamicAssetConfig.masterLeverOn())
         {
-            blacklistForCarryOn(woodType);
+            for (String woodType: WoodTypeLister.getWoodIds(true))
+            {
+                blacklistForCarryOn(woodType);
+            }
         }
         //System.out.println("test imc " + Constants.MODID + ":dual_table_bottom_left_" + "oak   " + ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Constants.MODID + ":dual_table_bottom_left_" + "oak")).getCloneItemStack(null, null, null, null, null));
         if (ModList.get().isLoaded("theoneprobe"))

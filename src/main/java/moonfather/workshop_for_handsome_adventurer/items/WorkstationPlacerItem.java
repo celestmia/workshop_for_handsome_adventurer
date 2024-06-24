@@ -44,14 +44,12 @@ public class WorkstationPlacerItem extends Item
 
 	private final MutableComponent Tooltip1, Tooltip2;
 	@Override
-	public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> list, TooltipFlag advanced)
+	public void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> list, TooltipFlag advanced)
 	{
-		super.appendHoverText(itemStack, level, list, advanced);
+		super.appendHoverText(itemStack, context, list, advanced);
 		list.add(this.Tooltip1);
 		list.add(this.Tooltip2);
 	}
-
-
 
 	@Override
 	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context)
@@ -76,10 +74,10 @@ public class WorkstationPlacerItem extends Item
 		Direction right = context.getHorizontalDirection().getClockWise();
 		String hostModId = ExternalWoodSupport.getHostMod(this.woodType);
 		String prefix = ExternalWoodSupport.getPrefix(this.woodType);
-		Block bottomLeft = BuiltInRegistries.BLOCK.get(new ResourceLocation(hostModId, prefix + "dual_table_bottom_left_" + this.woodType));
-		Block bottomRight = BuiltInRegistries.BLOCK.get(new ResourceLocation(hostModId, prefix + "dual_table_bottom_right_" + this.woodType));
-		Block topLeft = BuiltInRegistries.BLOCK.get(new ResourceLocation(hostModId, prefix + "dual_table_top_left_" + this.woodType));
-		Block topRight = BuiltInRegistries.BLOCK.get(new ResourceLocation(hostModId, prefix + "dual_table_top_right_" + this.woodType));
+		Block bottomLeft = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(hostModId, prefix + "dual_table_bottom_left_" + this.woodType));
+		Block bottomRight = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(hostModId, prefix + "dual_table_bottom_right_" + this.woodType));
+		Block topLeft = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(hostModId, prefix + "dual_table_top_left_" + this.woodType));
+		Block topRight = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(hostModId, prefix + "dual_table_top_right_" + this.woodType));
 		context.getLevel().setBlock(position, bottomLeft.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facingToSet).setValue(AdvancedTableBottomPrimary.BEING_PLACED, true), 0);
 		context.getLevel().setBlock(position.above(), topLeft.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facingToSet).setValue(AdvancedTableBottomPrimary.BEING_PLACED, true), 0);
 		context.getLevel().setBlock(position.relative(right), bottomRight.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facingToSet).setValue(AdvancedTableBottomPrimary.BEING_PLACED, true), 0);

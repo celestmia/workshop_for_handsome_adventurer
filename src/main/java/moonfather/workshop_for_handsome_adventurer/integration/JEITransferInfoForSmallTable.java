@@ -7,8 +7,10 @@ import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMen
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class JEITransferInfoForSmallTable implements IRecipeTransferInfo {
 
     @Override
     public boolean canHandle(AbstractContainerMenu container, Object recipe) {
-        return container instanceof SimpleTableMenu && recipe instanceof Recipe<?>;
+        return container instanceof SimpleTableMenu && recipe instanceof RecipeHolder;
     }
 
     @Override

@@ -9,25 +9,28 @@ import moonfather.workshop_for_handsome_adventurer.integration.TOPRegistration;
 import moonfather.workshop_for_handsome_adventurer.other.CreativeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
-// todo: c:relocation_not_supported in 1.20+
 
 @Mod(Constants.MODID)
 public class ModWorkshop
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ModWorkshop(IEventBus modBus)
+
+    // bug: toolrack shows axe that is in my hand until i put it into another slot  CAN'T REPRODUCE
+    // todo: ExternalWoodSupport
+    // todo: test carryon
+    public ModWorkshop(IEventBus modBus, ModContainer modContainer)
     {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         Registration.init(modBus);
         modBus.addListener(CommonSetup::init);
         modBus.addListener(this::enqueueIMC);

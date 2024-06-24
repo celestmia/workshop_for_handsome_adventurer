@@ -23,10 +23,10 @@ public class TetraBeltSupport
     public static ItemStack getToolbeltIcon(Object searchResult)
     {
         ItemStack result = ((ItemStack) searchResult).copy();
-        result.getTag().remove("storageInventory");
-        result.getTag().remove("potionsInventory");
-        result.getTag().remove("quickInventory");
-        result.getTag().remove("quiverInventory");
+        //!!result.getTag().remove("storageInventory");
+        //!!result.getTag().remove("potionsInventory");
+        //!!result.getTag().remove("quickInventory");
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! sredi ovo     result.getTag().remove("quiverInventory");
         return result;
     }
 

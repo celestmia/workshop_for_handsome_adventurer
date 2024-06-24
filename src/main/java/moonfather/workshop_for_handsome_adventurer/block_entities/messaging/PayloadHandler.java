@@ -2,83 +2,81 @@ package moonfather.workshop_for_handsome_adventurer.block_entities.messaging;
 
 import moonfather.workshop_for_handsome_adventurer.block_entities.DualTableMenu;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMenu;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PayloadHandler
 {
     private PayloadHandler() {}
 
-    public static PayloadHandler getInstance()
+    public static void handleMessage(final ChestRenameMessage message, final IPayloadContext context)
     {
-        return INSTANCE;
-    }
-    private static final PayloadHandler INSTANCE = new PayloadHandler();
-
-    public void handleMessage(ChestRenameMessage message, PlayPayloadContext playPayloadContext)
-    {
-        if (playPayloadContext.player().isEmpty() || ! (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu))
+        // as of 1.20.6, things are by default handled on main thread
+        try
         {
-            return;
+            if (context.player() instanceof ServerPlayer sp         // the client that sent this packet
+                && sp.containerMenu instanceof SimpleTableMenu menu)
+            {
+                menu.renameChest(message.value());
+            }
         }
-        playPayloadContext.workHandler().submitAsync(
-                () -> {
-                    if (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu menu)
-                    {
-                        menu.renameChest(message.value());
-                    }
-                }
-        );
+        catch (Exception e)
+        {
+            context.disconnect(Component.literal("Networking error in NI mod, msg1:  \n" + e.getMessage()));
+        }
     }
 
-    public void handleMessage(ClientRequestMessage message, PlayPayloadContext playPayloadContext)
+    public static void handleMessage(final ClientRequestMessage message, final IPayloadContext context)
     {
-        if (playPayloadContext.player().isEmpty() || ! (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu))
+        // as of 1.20.6, things are by default handled on main thread
+        try
         {
-            return;
-        }
-        playPayloadContext.workHandler().submitAsync(
-                () -> {
-                    if (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu menu)
-                    {
-                        if (message.value() == ClientRequestMessage.REQUEST_REMOTE_UPDATE)
-                        {
-                            menu.sendAllDataToRemote();
-                            menu.broadcastChanges();
-                        }
-                    }
-                }
-        );
-    }
-
-    public void handleMessage(GridChangeMessage message, PlayPayloadContext playPayloadContext)
-    {
-        if (playPayloadContext.player().isEmpty() || ! (playPayloadContext.player().get().containerMenu instanceof DualTableMenu))
-        {
-            return;
-        }
-        playPayloadContext.workHandler().submitAsync(
-                () -> {
-                    if (playPayloadContext.player().get().containerMenu instanceof DualTableMenu menu)
-                    {
-                        menu.changeRecipeTargetGridTo(message.destination());
-                    }
-                }
-        );
-    }
-
-    public void handleMessage(TabChangeMessage message, PlayPayloadContext playPayloadContext)
-    {
-        if (playPayloadContext.player().isEmpty() || ! (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu))
-        {
-            return;
-        }
-        playPayloadContext.workHandler().submitAsync(
-            () -> {
-                if (playPayloadContext.player().get().containerMenu instanceof SimpleTableMenu menu)
+            if (context.player() instanceof ServerPlayer sp         // the client that sent this packet
+                    && sp.containerMenu instanceof SimpleTableMenu menu)
+            {
+                if (message.value() == ClientRequestMessage.REQUEST_REMOTE_UPDATE)
                 {
-                    menu.changeTabTo(message.tab());
+                    menu.sendAllDataToRemote();
+                    menu.broadcastChanges();
                 }
             }
-        );
+        }
+        catch (Exception e)
+        {
+            context.disconnect(Component.literal("Networking error in NI mod, msg2:  \n" + e.getMessage()));
+        }
+    }
+
+    public static void handleMessage(final GridChangeMessage message, final IPayloadContext context)
+    {
+        try
+        {
+            if (context.player() instanceof ServerPlayer sp         // the client that sent this packet
+                    && sp.containerMenu instanceof DualTableMenu menu)
+            {
+                menu.changeRecipeTargetGridTo(message.destination());
+            }
+        }
+        catch (Exception e)
+        {
+            context.disconnect(Component.literal("Networking error in NI mod, msg3:  \n" + e.getMessage()));
+        }
+    }
+
+    public static void handleMessage(final TabChangeMessage message, final IPayloadContext context)
+    {
+        try
+        {
+            if (context.player() instanceof ServerPlayer sp         // the client that sent this packet
+                    && sp.containerMenu instanceof SimpleTableMenu menu)
+            {
+                menu.changeTabTo(message.tab());
+            }
+        }
+        catch (Exception e)
+        {
+            context.disconnect(Component.literal("Networking error in NI mod, msg4:  \n" + e.getMessage()));
+        }
     }
 }

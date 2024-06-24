@@ -5,10 +5,11 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class AdvancementEvent
 {
     @SubscribeEvent
@@ -27,6 +28,6 @@ public class AdvancementEvent
 
     private static AdvancementHolder GetAdvancement(ServerPlayer sp, String namespace, String name)
     {
-        return sp.getServer().getAdvancements().get(new ResourceLocation(namespace, name));
+        return sp.getServer().getAdvancements().get(ResourceLocation.fromNamespaceAndPath(namespace, name));
     }
 }

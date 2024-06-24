@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 @JeiPlugin
 public class JEITransferSupport implements IModPlugin
 {
+	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration)
 	{
 		registration.addRecipeTransferHandler(new JEITransferInfoForDualTable());
@@ -17,6 +18,6 @@ public class JEITransferSupport implements IModPlugin
 	@Override
 	public ResourceLocation getPluginUid()
 	{
-		return new ResourceLocation("workshop_for_handsome_adventurer:jei_transfer_plugin");
+		return ResourceLocation.parse("workshop_for_handsome_adventurer:jei_transfer_plugin");
 	}
 }

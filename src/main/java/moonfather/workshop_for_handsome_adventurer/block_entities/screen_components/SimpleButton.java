@@ -28,9 +28,9 @@ public class SimpleButton extends Button
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
-        this.resourceLocationNormal = new ResourceLocation(texture.formatted(suffixNormal));
-        this.resourceLocationHovered = new ResourceLocation(texture.formatted(suffixHovered));
-        this.resourceLocationDisabled = new ResourceLocation(texture.formatted(suffixDisabled));
+        this.resourceLocationNormal = ResourceLocation.parse(texture.formatted(suffixNormal));
+        this.resourceLocationHovered = ResourceLocation.parse(texture.formatted(suffixHovered));
+        this.resourceLocationDisabled = ResourceLocation.parse(texture.formatted(suffixDisabled));
     }
 
 

@@ -39,7 +39,7 @@ public class DualTableCraftingScreen extends SimpleTableCraftingScreen
 		if (BACKGROUND_LOCATION[0] == null)
 		{
 			for (int i = 0; i <= 4; i++) {
-				BACKGROUND_LOCATION[i] = new ResourceLocation(("workshop_for_handsome_adventurer:textures/gui/gui_dual_table_%d_slots.png".formatted(i)));
+				BACKGROUND_LOCATION[i] = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/gui_dual_table_%d_slots.png".formatted(i));
 			}
 		}
 		if (this.backgroundImageLocation == null)
@@ -103,18 +103,18 @@ public class DualTableCraftingScreen extends SimpleTableCraftingScreen
 			this.addRenderableWidget(this.jeiButton);
 		}
 	}
-    private static final WidgetSprites spritesJEI = new WidgetSprites(new ResourceLocation(Constants.MODID, "textures/gui/jei_up_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/jei_down_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/jei_up_hovered.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/jei_down_hovered.png"));
-    private static final WidgetSprites spritesREI = new WidgetSprites(new ResourceLocation(Constants.MODID, "textures/gui/rei_up_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/rei_down_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/rei_up_hovered.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/rei_down_hovered.png"));
-    private static final WidgetSprites spritesEMI = new WidgetSprites(new ResourceLocation(Constants.MODID, "textures/gui/emi_up_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/emi_down_normal.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/emi_up_hovered.png"),
-                                                                      new ResourceLocation(Constants.MODID, "textures/gui/emi_down_hovered.png"));
+    private static final WidgetSprites spritesJEI = new WidgetSprites(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/jei_up_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/jei_down_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/jei_up_hovered.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/jei_down_hovered.png"));
+    private static final WidgetSprites spritesREI = new WidgetSprites(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/rei_up_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/rei_down_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/rei_up_hovered.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/rei_down_hovered.png"));
+    private static final WidgetSprites spritesEMI = new WidgetSprites(ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/emi_up_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/emi_down_normal.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/emi_up_hovered.png"),
+                                                                      ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/emi_down_hovered.png"));
 
 
 

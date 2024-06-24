@@ -1,17 +1,17 @@
 package moonfather.workshop_for_handsome_adventurer.block_entities.messaging;
 
 import moonfather.workshop_for_handsome_adventurer.Constants;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class MessagingInitialization
 {
-    public static void register(final RegisterPayloadHandlerEvent event)
+    public static void register(final RegisterPayloadHandlersEvent event)
     {
-        final IPayloadRegistrar registrar = event.registrar(Constants.MODID);
-        registrar.play(ChestRenameMessage.ID, ChestRenameMessage::new, handler -> handler.server(PayloadHandler.getInstance()::handleMessage));
-        registrar.play(ClientRequestMessage.ID, ClientRequestMessage::new, handler -> handler.server(PayloadHandler.getInstance()::handleMessage));
-        registrar.play(GridChangeMessage.ID, GridChangeMessage::new, handler -> handler.server(PayloadHandler.getInstance()::handleMessage));
-        registrar.play(TabChangeMessage.ID, TabChangeMessage::new, handler -> handler.server(PayloadHandler.getInstance()::handleMessage));
+        final PayloadRegistrar registrar = event.registrar(Constants.MODID + "_v3");
+        registrar.playToServer(ChestRenameMessage.TYPE, ChestRenameMessage.STREAM_CODEC, PayloadHandler::handleMessage);
+        registrar.playToServer(ClientRequestMessage.TYPE, ClientRequestMessage.STREAM_CODEC, PayloadHandler::handleMessage);
+        registrar.playToServer(GridChangeMessage.TYPE, GridChangeMessage.STREAM_CODEC, PayloadHandler::handleMessage);
+        registrar.playToServer(TabChangeMessage.TYPE, TabChangeMessage.STREAM_CODEC, PayloadHandler::handleMessage);
     }
 }

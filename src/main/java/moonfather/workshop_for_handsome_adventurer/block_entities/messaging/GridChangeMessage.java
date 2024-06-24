@@ -2,26 +2,33 @@ package moonfather.workshop_for_handsome_adventurer.block_entities.messaging;
 
 import moonfather.workshop_for_handsome_adventurer.Constants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public record GridChangeMessage(int destination) implements CustomPacketPayload
 {
-    public static final ResourceLocation ID = new ResourceLocation(Constants.MODID, "message_gridchange");
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "message_gridchange");
+    public static final Type<GridChangeMessage> TYPE = new Type<>(ID);
 
-    public GridChangeMessage(final FriendlyByteBuf buffer)
-    {
-        this(buffer.readInt());
-    }
+
 
     @Override
-    public void write(final FriendlyByteBuf buffer) {
-        buffer.writeInt(destination);
+    public Type<? extends CustomPacketPayload> type()
+    {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id()
-    {
-        return ID;
+    public static final StreamCodec<RegistryFriendlyByteBuf, GridChangeMessage> STREAM_CODEC = StreamCodec.of(
+            GridChangeMessage::encode,
+            GridChangeMessage::decode);
+
+
+
+    private static void encode(RegistryFriendlyByteBuf buf, GridChangeMessage msg) {
+        buf.writeInt(msg.destination);
     }
+    private static @NotNull GridChangeMessage decode(RegistryFriendlyByteBuf buf) { return new GridChangeMessage(buf.readInt()); }
 }

@@ -6,6 +6,7 @@ import moonfather.workshop_for_handsome_adventurer.integration.CuriosAccessor;
 import moonfather.workshop_for_handsome_adventurer.integration.TetraBeltSupport;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
@@ -146,7 +147,7 @@ public class InventoryAccessHelper
     }
 
     private static boolean canOpenShulkerBox(Level level, BlockState blockState, BlockPos pos) {
-        AABB aabb = Shulker.getProgressDeltaAabb(blockState.getValue(DirectionalBlock.FACING), 0.0F, 0.5F).move(pos).deflate(1.0E-6D);
+        AABB aabb = Shulker.getProgressDeltaAabb(1.0F, blockState.getValue(DirectionalBlock.FACING), 0.0F, 0.5F).move(pos).deflate(1.0E-6D);
         return level.noCollision(aabb);
     }
 
@@ -306,7 +307,7 @@ public class InventoryAccessHelper
         {
             InventoryAccessHelper.InventoryAccessRecord current = this.adjacentInventories.get(i);
             ItemStack chest = current.ItemChest.copy();
-            chest.setHoverName(current.Name);
+            chest.set(DataComponents.CUSTOM_NAME, current.Name);
             if (current.VisibleSlotCount > 27) { chest.setCount(2); }
             if (! current.Nameable) { chest.setCount(chest.getCount() | 4); }
             ItemStack suff = current.ItemFirst.copy();

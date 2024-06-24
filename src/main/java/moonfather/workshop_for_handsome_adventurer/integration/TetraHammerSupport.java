@@ -14,7 +14,7 @@ public class TetraHammerSupport {
 
     public static BlockState getWorkBench()
     {
-        return BuiltInRegistries.BLOCK.get(new ResourceLocation("tetra", "basic_workbench")).defaultBlockState();
+        return BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("tetra", "basic_workbench")).defaultBlockState();
     }
 }
 

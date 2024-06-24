@@ -94,7 +94,7 @@ public class AdvancedTableTopSecondary extends DualTableBaseBlock
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult bhr1)
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult bhr1)
 	{
 		BlockPos posMain = pos.below();
 		BlockState stateMain = level.getBlockState(posMain);
@@ -104,7 +104,7 @@ public class AdvancedTableTopSecondary extends DualTableBaseBlock
 			return InteractionResult.sidedSuccess(level.isClientSide());
 		}
 		BlockHitResult bhr2 = new BlockHitResult(bhr1.getLocation(), bhr1.getDirection(), posMain, bhr1.isInside());
-		return stateMain.getBlock().use(stateMain, level, posMain, player, hand, bhr2);
+		return stateMain.useWithoutItem(level, player, bhr2);
 	}
 
 	@Override

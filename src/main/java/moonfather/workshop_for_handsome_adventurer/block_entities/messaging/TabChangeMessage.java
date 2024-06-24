@@ -2,26 +2,33 @@ package moonfather.workshop_for_handsome_adventurer.block_entities.messaging;
 
 import moonfather.workshop_for_handsome_adventurer.Constants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public record TabChangeMessage(int tab) implements CustomPacketPayload
 {
-    public static final ResourceLocation ID = new ResourceLocation(Constants.MODID, "message_tabchange");
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "message_tabchange");
+    public static final Type<TabChangeMessage> TYPE = new Type<>(ID);
 
-    public TabChangeMessage(final FriendlyByteBuf buffer)
-    {
-        this(buffer.readInt());
-    }
+
 
     @Override
-    public void write(final FriendlyByteBuf buffer) {
-        buffer.writeInt(tab);
+    public Type<? extends CustomPacketPayload> type()
+    {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id()
-    {
-        return ID;
+    public static final StreamCodec<RegistryFriendlyByteBuf, TabChangeMessage> STREAM_CODEC = StreamCodec.of(
+            TabChangeMessage::encode,
+            TabChangeMessage::decode);
+
+
+
+    private static void encode(RegistryFriendlyByteBuf buf, TabChangeMessage msg) {
+        buf.writeInt(msg.tab);
     }
+    private static @NotNull TabChangeMessage decode(RegistryFriendlyByteBuf buf) { return new TabChangeMessage(buf.readInt()); }
 }

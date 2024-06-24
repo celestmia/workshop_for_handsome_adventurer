@@ -94,7 +94,7 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 		this.renderCustomizationTooltips(graphics, p_98480_, p_98481_);
 	}
 	private TextureAtlasSprite excessSlotSprite = null;
-	private static final ResourceLocation EXCESS_SLOT_BG = new ResourceLocation(Constants.MODID, "gui/x_slot");
+	private static final ResourceLocation EXCESS_SLOT_BG = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/x_slot");
 
 	@Override
 	protected void renderBg(GuiGraphics graphics, float p_98475_, int p_98476_, int p_98477_) {
@@ -125,7 +125,7 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 			{
 				if (hasShiftDown()) {
 					if (tooltipCustomizationsFull == null) {
-						String itemKey = BuiltInRegistries.ITEM.get(new ResourceLocation(CommonConfig.AccessCustomizationItem.get())).getDescriptionId();
+						String itemKey = BuiltInRegistries.ITEM.get(ResourceLocation.parse(CommonConfig.AccessCustomizationItem.get())).getDescriptionId();
 						String itemName = Language.getInstance().getOrDefault(itemKey);
 						tooltipCustomizationsFull = new ArrayList<>(15);
 						tooltipCustomizationsFull.add(tooltipCustomizationsTitle);
@@ -160,9 +160,9 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	{
 		if (CRAFTING_TABLE_LOCATION[0] == null)
 		{
-			CRAFTING_TABLE_LOCATION[0] = new ResourceLocation("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_0_slots.png");
-			CRAFTING_TABLE_LOCATION[1] = new ResourceLocation("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_1_slots.png");
-			CRAFTING_TABLE_LOCATION[2] = new ResourceLocation("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_2_slots.png");
+			CRAFTING_TABLE_LOCATION[0] = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_0_slots.png");
+			CRAFTING_TABLE_LOCATION[1] = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_1_slots.png");
+			CRAFTING_TABLE_LOCATION[2] = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/gui_simple_table_2_slots.png");
 		}
 		if (this.backgroundImageLocation == null)
 		{

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -29,7 +30,7 @@ public class ToolRackTESR implements BlockEntityRenderer<ToolRackBlockEntity>
 {
 	private ItemRenderer itemRenderer = null;
 	private final BlockEntityRendererProvider.Context context;
-	private final TagKey<Item> itemsThatWeShouldntRotate = TagKey.create(Registries.ITEM, new ResourceLocation(Constants.MODID, "dont_rotate_on_toolrack"));
+	private final TagKey<Item> itemsThatWeShouldntRotate = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "dont_rotate_on_toolrack"));
 
 
 	public ToolRackTESR(BlockEntityRendererProvider.Context context)
@@ -135,7 +136,7 @@ public class ToolRackTESR implements BlockEntityRenderer<ToolRackBlockEntity>
 			{
 				matrixStack.mulPose(ZMinus45);  // 1.19.4      Vector3f.ZP.rotationDegrees(-45.0F)
 			}
-			else if ((itemStack.getTag() != null && itemStack.getTag().contains("Potion")) || itemStack.is(Items.GLASS_BOTTLE))
+			else if (itemStack.get(DataComponents.POTION_CONTENTS) != null || itemStack.is(Items.GLASS_BOTTLE))
 			{
 				matrixStack.translate(0, 0.1, 0);
 			}
@@ -160,14 +161,7 @@ public class ToolRackTESR implements BlockEntityRenderer<ToolRackBlockEntity>
 	public static ItemStack RemoveEnchantments(ItemStack stored)
 	{
 		ItemStack result = stored.copy();
-		if (! result.hasTag())
-		{
-			return result;
-		}
-		if (result.getTag().contains("Enchantments"))
-		{
-			result.getTag().remove("Enchantments");
-		}
+		result.remove(DataComponents.ENCHANTMENTS);
 		return result;
 	}
 

@@ -1,6 +1,7 @@
 package moonfather.workshop_for_handsome_adventurer.other;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import moonfather.workshop_for_handsome_adventurer.CommonConfig;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -37,12 +38,12 @@ public class OptionalRecipeCondition implements ICondition
 	/////////////////////////////////////////////////////
 
 	@Override
-	public Codec<? extends ICondition> codec()
+	public MapCodec<? extends ICondition> codec()
 	{
 		return CODEC;
 	}
 
-	public static Codec<OptionalRecipeCondition> CODEC = RecordCodecBuilder.create(
+	public static MapCodec<OptionalRecipeCondition> CODEC = RecordCodecBuilder.mapCodec(
 			builder -> builder
 					.group(
 							Codec.STRING.fieldOf("flag_code").forGetter(orc -> orc.flagCode))

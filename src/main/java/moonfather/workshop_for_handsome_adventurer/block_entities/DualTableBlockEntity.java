@@ -3,6 +3,7 @@ package moonfather.workshop_for_handsome_adventurer.block_entities;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,15 +37,17 @@ public class DualTableBlockEntity extends SimpleTableBlockEntity
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider)
+    {
+        super.loadAdditional(tag, lookupProvider);
         this.data0 = tag.getInt("int0");
     }
 
     @Override
-    public CompoundTag saveInternal(CompoundTag tag) {
+    protected CompoundTag saveInternal(CompoundTag tag, HolderLookup.Provider lookupProvider)
+    {
         tag.putInt("int0", this.data0);
-        return super.saveInternal(tag);
+        return super.saveInternal(tag, lookupProvider);
     }
 
     ///////////////////////////////

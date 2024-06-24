@@ -28,7 +28,7 @@ public class TOPInfoProvider extends WailaBaseProvider implements IProbeInfoProv
     @Override
     public ResourceLocation getID()
     {
-        return new ResourceLocation(Constants.MODID, "top_shelf");
+        return ResourceLocation.fromNamespaceAndPath(Constants.MODID, "top_shelf");
     }
 
     @Override
@@ -62,9 +62,9 @@ public class TOPInfoProvider extends WailaBaseProvider implements IProbeInfoProv
                     List<Component> enchantments = this.getEnchantmentParts(book);
                     if (enchantments != null)
                     {
-                        for (int i = 0; i < enchantments.size(); i += 2)
+                        for (int i = 0; i < enchantments.size(); i += 1)
                         {
-                            probeInfo.horizontal().padding(30, 4).text(enchantments.get(i)).text(enchantments.get(i + 1));
+                            probeInfo.horizontal().padding(30, 4).text(enchantments.get(i));
                         }
                     }
                 }
@@ -93,9 +93,9 @@ public class TOPInfoProvider extends WailaBaseProvider implements IProbeInfoProv
                     List<Component> enchantments = this.getEnchantmentParts(tool);
                     if (enchantments != null)
                     {
-                        for (int i = 0; i < enchantments.size(); i += 2)
+                        for (int i = 0; i < enchantments.size(); i += 1)
                         {
-                            probeInfo.horizontal().padding(30, 4).text(enchantments.get(i)).text(enchantments.get(i + 1));
+                            probeInfo.horizontal().padding(30, 4).text(enchantments.get(i));
                         }
                     }
                 }

@@ -115,12 +115,13 @@ public class AdvancedTableBottomPrimary extends DualTableBaseBlock implements En
 	{
 		String wood = BuiltInRegistries.BLOCK.getKey(this).getPath();
 		wood = wood.substring(wood.indexOf("_left_") + 6);
-		return new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(ExternalWoodSupport.getHostMod(wood), ExternalWoodSupport.getPrefix(wood) + "workstation_placer_" + wood)));
+		return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(ExternalWoodSupport.getHostMod(wood), ExternalWoodSupport.getPrefix(wood) + "workstation_placer_" + wood)));
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult)
+	@Override
+	public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult)
 	{
 		if (level.isClientSide)
 		{
@@ -165,6 +166,7 @@ public class AdvancedTableBottomPrimary extends DualTableBaseBlock implements En
 	}
 
 	private static final Component CONTAINER_TITLE = Component.translatable("container.crafting");
+	@Override
 	public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos blockPos)
 	{
 		return new SimpleMenuProvider((containerId, inventory, p_52231_) ->

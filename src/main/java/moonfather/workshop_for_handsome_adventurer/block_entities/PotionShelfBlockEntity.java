@@ -3,6 +3,7 @@ package moonfather.workshop_for_handsome_adventurer.block_entities;
 import moonfather.workshop_for_handsome_adventurer.CommonConfig;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -33,11 +34,12 @@ public class PotionShelfBlockEntity extends ToolRackBlockEntity
 //        compoundTag.putIntArray("Counts", this.itemCounts);
 //    }
 
+
     @Override
-    public void load(CompoundTag compoundTag)
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider)
     {
-        super.load(compoundTag);
-        int[] array = compoundTag.getIntArray("Counts");
+        super.loadAdditional(tag, lookupProvider);
+        int[] array = tag.getIntArray("Counts");
         for (int i = 0; i < array.length; i++) {
             this.itemCounts.set(i, array[i]);
             if (array[i] == 0 && ! this.GetItem(i).isEmpty())
@@ -48,9 +50,9 @@ public class PotionShelfBlockEntity extends ToolRackBlockEntity
     }
 
     @Override
-    public CompoundTag saveInternal(CompoundTag compoundTag)
+    protected CompoundTag saveInternal(CompoundTag compoundTag, HolderLookup.Provider lookupProvider)
     {
-        super.saveInternal(compoundTag);
+        super.saveInternal(compoundTag, lookupProvider);
         compoundTag.putIntArray("Counts", this.itemCounts);
         return compoundTag;
     }

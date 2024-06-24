@@ -34,8 +34,8 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
     public static final int PANEL_WIDTH = 176;
     public static final int PANEL_HEIGHT_WITHOUT_TABS = 134;
     public static final int PANEL_HEIGHT_WITH_TABS = 166;
-    protected static final ResourceLocation BG_CHEST_LOCATION_3_ROWS = new ResourceLocation("workshop_for_handsome_adventurer:textures/gui/left_panel_normal_chest.png");
-    protected static final ResourceLocation BG_CHEST_LOCATION_6_ROWS = new ResourceLocation("workshop_for_handsome_adventurer:textures/gui/left_panel_double_chest.png");
+    protected static final ResourceLocation BG_CHEST_LOCATION_3_ROWS = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/left_panel_normal_chest.png");
+    protected static final ResourceLocation BG_CHEST_LOCATION_6_ROWS = ResourceLocation.parse("workshop_for_handsome_adventurer:textures/gui/left_panel_double_chest.png");
     private static final String RENAME_BUTTON_LOCATION = "workshop_for_handsome_adventurer:textures/gui/rename_%s.png";
     private final String renameTooltipKey = "message.workshop_for_handsome_adventurer.rename";
 
@@ -444,8 +444,8 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
         public InventoryAccessComponent parent;
         private ItemStack itemMain = ItemStack.EMPTY, itemSub = ItemStack.EMPTY;
         private int chestIndex;
-        private static final ResourceLocation imageActiveTab = new ResourceLocation(Constants.MODID, "textures/gui/tab_top_active.png"); // no need for WidgetSprites class
-        private static final ResourceLocation imageInactiveTab = new ResourceLocation(Constants.MODID, "textures/gui/tab_top_inactive.png");
+        private static final ResourceLocation imageActiveTab = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/tab_top_active.png"); // no need for WidgetSprites class
+        private static final ResourceLocation imageInactiveTab = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "textures/gui/tab_top_inactive.png");
 
         public TabButton()
         {

@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -42,9 +43,15 @@ public abstract class BookShelf extends ToolRack
     }
 
     private static final int INITIAL_BOOK_COUNT = 12; // so that we don't have 8 hardcoded anywhere
-    protected int numberOfBooksInARow() { return 4; }
-    protected int numberOfRows() { return 2; }
-    protected boolean singleRowIsTop() { return true; }
+
+    protected abstract int numberOfBooksInARow();
+
+    protected abstract int numberOfRows();
+
+    protected boolean singleRowIsTop()
+    {
+        return true;
+    }
 
     ////////// main part///////////////////////
 
@@ -60,12 +67,19 @@ public abstract class BookShelf extends ToolRack
         double frac = blockHitResult.getLocation().y - blockHitResult.getBlockPos().getY();
         if (this.numberOfRows() == 2)
         {
-            if (frac >= 8 / 16d) { aboveThisRow = 0; /* row1*/ } else { aboveThisRow = this.numberOfBooksInARow(); /* row2*/ }
+            if (frac >= 8 / 16d)
+            {
+                aboveThisRow = 0; /* row1*/
+            }
+            else
+            {
+                aboveThisRow = this.numberOfBooksInARow(); /* row2*/
+            }
         }
         else
         {
             aboveThisRow = 0;
-            if (frac > 8/16d && ! this.singleRowIsTop() || frac < 8/16d && this.singleRowIsTop())
+            if (frac > 8 / 16d && !this.singleRowIsTop() || frac < 8 / 16d && this.singleRowIsTop())
             {
                 return -1;
             }
@@ -76,20 +90,32 @@ public abstract class BookShelf extends ToolRack
         frac = (blockHitResult.getLocation().z - integral) * blockHitResult.getDirection().getStepX();
         integral = (int) blockHitResult.getLocation().x;
         frac -= (blockHitResult.getLocation().x - integral) * blockHitResult.getDirection().getStepZ();
-        while (frac < 0) frac += 1.0;
-        while (frac > 1) frac -= 1.0;
+        while (frac < 0)
+        {
+            frac += 1.0;
+        }
+        while (frac > 1)
+        {
+            frac -= 1.0;
+        }
         int horizontal = this.numberOfBooksInARow() - 1 - (int) Math.floor(frac * this.numberOfBooksInARow()); // 3-Ax4 ---- x4 turns quarters of a block into slots, 3 minus slot turns indices around because i did the above math backwards
 
         return aboveThisRow + horizontal;
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult)
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (hand == InteractionHand.OFF_HAND)
         {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult)
+    {
         if (level.isClientSide)
         {
             return InteractionResult.SUCCESS;
@@ -120,21 +146,22 @@ public abstract class BookShelf extends ToolRack
             {
                 doPlaceBookOntoShelf(player, itemInOffHand, slot, BE, level, pos, blockState);
             }
-            else if (! itemInMainHand.isEmpty() || ! itemInOffHand.isEmpty())
+            else if (!itemInMainHand.isEmpty() || !itemInOffHand.isEmpty())
             {
                 player.displayClientMessage(NotABookMessage, true);
             }
         }
-        else if (! existing.isEmpty() && itemInMainHand.isEmpty())
+        else if (!existing.isEmpty() && itemInMainHand.isEmpty())
         {
             doPickBookFromShelf(player, InteractionHand.MAIN_HAND, existing, slot, BE, level, pos, blockState);
         }
-        else if (! existing.isEmpty() && ! itemInMainHand.isEmpty() && itemInOffHand.isEmpty())
+        else if (!existing.isEmpty() && !itemInMainHand.isEmpty() && itemInOffHand.isEmpty())
         {
             doPickBookFromShelf(player, InteractionHand.OFF_HAND, existing, slot, BE, level, pos, blockState);
         }
         return InteractionResult.CONSUME;
     }
+
     private final MutableComponent NotABookMessage = Component.translatable("message.workshop_for_handsome_adventurer.invalid_item_for_book_shelf");
 
     private static void doPickBookFromShelf(Player player, InteractionHand hand, ItemStack bookInShelfSlot, int slot, BookShelfBlockEntity BE, Level level, BlockPos pos, BlockState blockState)
@@ -172,15 +199,29 @@ public abstract class BookShelf extends ToolRack
         return BE;
     }
 
-    private int getBookCount() { return this.numberOfRows() * this.numberOfBooksInARow(); }
-    private int getBookCapacity() { return Math.max(this.numberOfRows() * this.numberOfBooksInARow(), 8); }
+    private int getBookCount()
+    {
+        return this.numberOfRows() * this.numberOfBooksInARow();
+    }
+
+    private int getBookCapacity()
+    {
+        return Math.max(this.numberOfRows() * this.numberOfBooksInARow(), 8);
+    }
 
     //////////////// flammability ///////////////////
 
     @Override
-    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { return 5; }
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
+    {
+        return 5;
+    }
+
     @Override
-    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { return 20; }
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
+    {
+        return 20;
+    }
 
     //////////////// states ///////////////////
 
@@ -201,8 +242,13 @@ public abstract class BookShelf extends ToolRack
             builder.add(SLOT_OCCUPIED[i]);
         }
     }
+
     public static final BooleanProperty[] SLOT_OCCUPIED = new BooleanProperty[20];
-    private static BooleanProperty getSlotProperty(int slot) { return SLOT_OCCUPIED[slot]; }
+
+    private static BooleanProperty getSlotProperty(int slot)
+    {
+        return SLOT_OCCUPIED[slot];
+    }
 
 
 
@@ -228,18 +274,31 @@ public abstract class BookShelf extends ToolRack
         }
 
         @Override
+        protected int numberOfBooksInARow()
+        {
+            return 4;
+        }
+
+        @Override
+        protected int numberOfRows()
+        {
+            return 2;
+        }
+
+        @Override
         protected void PrepareListOfShapes()
         {
             this.shapes.clear();
             this.shapes.put(Direction.NORTH, SHAPE_FRAME1N);
-            this.shapes.put(Direction.EAST,  SHAPE_FRAME1E);
+            this.shapes.put(Direction.EAST, SHAPE_FRAME1E);
             this.shapes.put(Direction.SOUTH, SHAPE_FRAME1S);
-            this.shapes.put(Direction.WEST,  SHAPE_FRAME1W);
+            this.shapes.put(Direction.WEST, SHAPE_FRAME1W);
         }
+
         private static final VoxelShape SHAPE_FRAME1N = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.99D, 7.0D);
         private static final VoxelShape SHAPE_FRAME1E = Block.box(9.0D, 0.0D, 0.0D, 16.0D, 15.99D, 16.0D);
         private static final VoxelShape SHAPE_FRAME1S = Block.box(0.0D, 0.0D, 9.0D, 16.0D, 15.99D, 16.0D);
-        private static final VoxelShape SHAPE_FRAME1W = Block.box(0.0D, 0.0D, 0.0D,  7.0D, 15.99D, 16.0D);
+        private static final VoxelShape SHAPE_FRAME1W = Block.box(0.0D, 0.0D, 0.0D, 7.0D, 15.99D, 16.0D);
     }
 
     public static class TopSimple extends BookShelf
@@ -250,21 +309,31 @@ public abstract class BookShelf extends ToolRack
         }
 
         @Override
-        protected int numberOfRows() { return 1; }
+        protected int numberOfBooksInARow()
+        {
+            return 4;
+        }
+
+        @Override
+        protected int numberOfRows()
+        {
+            return 1;
+        }
 
         @Override
         protected void PrepareListOfShapes()
         {
             this.shapes.clear();
             this.shapes.put(Direction.NORTH, SHAPE_FRAME1N);
-            this.shapes.put(Direction.EAST,  SHAPE_FRAME1E);
+            this.shapes.put(Direction.EAST, SHAPE_FRAME1E);
             this.shapes.put(Direction.SOUTH, SHAPE_FRAME1S);
-            this.shapes.put(Direction.WEST,  SHAPE_FRAME1W);
+            this.shapes.put(Direction.WEST, SHAPE_FRAME1W);
         }
+
         private static final VoxelShape SHAPE_FRAME1N = Block.box(0.0D, 7.5D, 0.0D, 16.0D, 16.0D, 7.0D);
         private static final VoxelShape SHAPE_FRAME1E = Block.box(9.0D, 7.5D, 0.0D, 16.0D, 16.0D, 16.0D);
         private static final VoxelShape SHAPE_FRAME1S = Block.box(0.0D, 7.5D, 9.0D, 16.0D, 16.0D, 16.0D);
-        private static final VoxelShape SHAPE_FRAME1W = Block.box(0.0D, 7.5D, 0.0D,  7.0D, 16.0D, 16.0D);
+        private static final VoxelShape SHAPE_FRAME1W = Block.box(0.0D, 7.5D, 0.0D, 7.0D, 16.0D, 16.0D);
     }
 
     public static class TopWithLanterns extends BookShelf
@@ -272,6 +341,18 @@ public abstract class BookShelf extends ToolRack
         public TopWithLanterns(String type)
         {
             super(type, Properties.of().strength(2f, 3f).sound(SoundType.WOOD).ignitedByLava().mapColor(MapColor.COLOR_BROWN).pushReaction(PushReaction.DESTROY).lightLevel(TopWithLanterns::getLightLevel));
+        }
+
+        @Override
+        protected int numberOfBooksInARow()
+        {
+            return 4;
+        }
+
+        @Override
+        protected int numberOfRows()
+        {
+            return 1;
         }
 
         ////////////////////////
@@ -292,33 +373,29 @@ public abstract class BookShelf extends ToolRack
         ////////////////////////////
 
         @Override
-        protected int numberOfRows() { return 1; }
-
-        @Override
         protected void PrepareListOfShapes()
         {
             this.shapes.clear();
             this.shapes.put(Direction.NORTH, Shapes.or(SHAPE_FRAME1N, SHAPE_LAMPS1N));
-            this.shapes.put(Direction.EAST,  Shapes.or(SHAPE_FRAME1E, SHAPE_LAMPS1E));
+            this.shapes.put(Direction.EAST, Shapes.or(SHAPE_FRAME1E, SHAPE_LAMPS1E));
             this.shapes.put(Direction.SOUTH, Shapes.or(SHAPE_FRAME1S, SHAPE_LAMPS1S));
-            this.shapes.put(Direction.WEST,  Shapes.or(SHAPE_FRAME1W, SHAPE_LAMPS1W));
+            this.shapes.put(Direction.WEST, Shapes.or(SHAPE_FRAME1W, SHAPE_LAMPS1W));
         }
-        private static final VoxelShape SHAPE_FRAME1N = Block.box( 0.0D, 7.5D,  0.0D, 16.0D, 16.0D,  7.0D);
-        private static final VoxelShape SHAPE_FRAME1E = Block.box( 9.0D, 7.5D,  0.0D, 16.0D, 16.0D, 16.0D);
-        private static final VoxelShape SHAPE_FRAME1S = Block.box( 0.0D, 7.5D,  9.0D, 16.0D, 16.0D, 16.0D);
-        private static final VoxelShape SHAPE_FRAME1W = Block.box( 0.0D, 7.5D,  0.0D,  7.0D, 16.0D, 16.0D);
-        private static final VoxelShape SHAPE_LAMPS1N = Block.box( 2.5D, 3.0D,  0.0D, 13.5D,  7.5D,  4.0D);
-        private static final VoxelShape SHAPE_LAMPS1E = Block.box(12.0D, 3.0D,  2.5D, 16.0D,  7.5D, 13.5D);
-        private static final VoxelShape SHAPE_LAMPS1S = Block.box( 2.5D, 3.0D, 12.0D, 13.5D,  7.5D, 16.0D);
-        private static final VoxelShape SHAPE_LAMPS1W = Block.box( 0.0D, 3.0D,  2.5D,  4.0D,  7.5D, 13.5D);
+
+        private static final VoxelShape SHAPE_FRAME1N = Block.box(0.0D, 7.5D, 0.0D, 16.0D, 16.0D, 7.0D);
+        private static final VoxelShape SHAPE_FRAME1E = Block.box(9.0D, 7.5D, 0.0D, 16.0D, 16.0D, 16.0D);
+        private static final VoxelShape SHAPE_FRAME1S = Block.box(0.0D, 7.5D, 9.0D, 16.0D, 16.0D, 16.0D);
+        private static final VoxelShape SHAPE_FRAME1W = Block.box(0.0D, 7.5D, 0.0D, 7.0D, 16.0D, 16.0D);
+        private static final VoxelShape SHAPE_LAMPS1N = Block.box(2.5D, 3.0D, 0.0D, 13.5D, 7.5D, 4.0D);
+        private static final VoxelShape SHAPE_LAMPS1E = Block.box(12.0D, 3.0D, 2.5D, 16.0D, 7.5D, 13.5D);
+        private static final VoxelShape SHAPE_LAMPS1S = Block.box(2.5D, 3.0D, 12.0D, 13.5D, 7.5D, 16.0D);
+        private static final VoxelShape SHAPE_LAMPS1W = Block.box(0.0D, 3.0D, 2.5D, 4.0D, 7.5D, 13.5D);
+
+
 
         @Override
-        public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult)
+        public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult)
         {
-            if (hand == InteractionHand.OFF_HAND)
-            {
-                return InteractionResult.PASS;
-            }
             if (level.isClientSide)
             {
                 return InteractionResult.SUCCESS;
@@ -326,10 +403,10 @@ public abstract class BookShelf extends ToolRack
             int slot = this.getTargetedSlot(blockHitResult);
             if (slot == -1)
             {
-                level.setBlockAndUpdate(pos, blockState.setValue(LIGHTS_ON, ! blockState.getValue(LIGHTS_ON)));
+                level.setBlockAndUpdate(pos, blockState.setValue(LIGHTS_ON, !blockState.getValue(LIGHTS_ON)));
                 return InteractionResult.CONSUME;
             }
-            return super.use(blockState, level, pos, player, hand, blockHitResult);
+            return super.useWithoutItem(blockState, level, pos, player, blockHitResult);
         }
     }
 }

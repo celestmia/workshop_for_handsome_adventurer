@@ -1,6 +1,7 @@
 package moonfather.workshop_for_handsome_adventurer.block_entities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -45,17 +46,18 @@ public class BaseContainerBlockEntity extends BlockEntity
 
     ///////////////////////////////////
 
+
     @Override
-    public void load(CompoundTag compoundTag)
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider)
     {
-        super.load(compoundTag);
+        super.loadAdditional(pTag, lookupProvider);
         this.VerifyCapacity();
         for (int i = 0; i < this.capacity; i++)
         {
-            CompoundTag tag = compoundTag.getCompound("item" + i);
+            CompoundTag tag = pTag.getCompound("item" + i);
             if (tag.contains("id"))
             {
-                this.items.set(i, ItemStack.of(tag));
+                this.items.set(i, ItemStack.parseOptional(lookupProvider, tag));
             }
             else
             {
@@ -65,35 +67,48 @@ public class BaseContainerBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag)
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider)
     {
-        super.saveAdditional(compoundTag);
-        this.saveInternal(compoundTag);
+        super.saveAdditional(pTag, lookupProvider);
+        this.saveInternal(pTag, lookupProvider);
     }
 
-    public CompoundTag saveInternal(CompoundTag compoundTag)
+    protected CompoundTag saveInternal(CompoundTag compoundTag, HolderLookup.Provider lookupProvider)
     {
         this.VerifyCapacity();
-        for (int i = 0; i < this.capacity; i++) { compoundTag.put("item" + i, this.items.get(i).save(new CompoundTag())); }
+        for (int i = 0; i < this.capacity; i++)
+        {
+            if (! this.items.get(i).isEmpty())
+            {
+                compoundTag.put("item" + i, this.items.get(i).save(lookupProvider, new CompoundTag()));
+            }
+            else
+            {
+                if (compoundTag.contains("item" + i)) { compoundTag.remove("item" + i); }
+            }
+        }
         return compoundTag;
     }
 
     ////////////////////////////////////////////////////////////
 
+
+
     @Override
-    public void handleUpdateTag(CompoundTag tag)
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider)
     {
-        this.load(tag); // update client
+        this.loadWithComponents(tag, lookupProvider); // update client
     }
 
     @Override
-    public CompoundTag getUpdateTag()
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider)
     {
-        return this.saveInternal(new CompoundTag()); //send to client
+        return this.saveInternal(new CompoundTag(), lookupProvider); //send to client
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
+    public Packet<ClientGamePacketListener> getUpdatePacket()
+    {
         // Will get tag from #getUpdateTag
         return ClientboundBlockEntityDataPacket.create(this);
     }

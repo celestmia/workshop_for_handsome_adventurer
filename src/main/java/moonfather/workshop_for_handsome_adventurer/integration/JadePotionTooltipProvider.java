@@ -12,6 +12,7 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.IElement;
+import snownee.jade.api.ui.IElementHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,8 @@ public class JadePotionTooltipProvider implements IBlockComponentProvider, IServ
                     count = shelf.GetRemainingItems(slot);
                 }
                 List<IElement> list = new ArrayList<>(2);
-                list.add(tooltip.getElementHelper().text(Component.literal(" " + count + "x  ")));
-                list.add(tooltip.getElementHelper().text(shelf.GetItem(slot).getDisplayName()));
+                list.add(IElementHelper.get().text(Component.literal(" " + count + "x  ")));
+                list.add(IElementHelper.get().text(shelf.GetItem(slot).getDisplayName()));
                 tooltip.add(list);
             }
         }
@@ -64,5 +65,5 @@ public class JadePotionTooltipProvider implements IBlockComponentProvider, IServ
     public ResourceLocation getUid() {
         return this.pluginId;
     }
-    private final ResourceLocation pluginId = new ResourceLocation(Constants.MODID, "jade_plugin1");
+    private final ResourceLocation pluginId = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "jade_plugin1");
 }

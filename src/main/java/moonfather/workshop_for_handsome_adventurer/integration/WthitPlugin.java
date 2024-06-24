@@ -7,6 +7,7 @@ import moonfather.workshop_for_handsome_adventurer.block_entities.BookShelfBlock
 import moonfather.workshop_for_handsome_adventurer.block_entities.PotionShelfBlockEntity;
 import moonfather.workshop_for_handsome_adventurer.block_entities.ToolRackBlockEntity;
 import moonfather.workshop_for_handsome_adventurer.blocks.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public class WthitPlugin implements IWailaPlugin {
 
     private static class WorkstationProvider implements IBlockComponentProvider {
         private static final Map<Block, ItemComponent> map = new HashMap<>();
-        private static final ResourceLocation topLine = new ResourceLocation("waila", "object_name");
+        private static final ResourceLocation topLine = ResourceLocation.fromNamespaceAndPath("waila", "object_name");
 
         @Override
         public @Nullable ITooltipComponent getIcon(IBlockAccessor accessor, IPluginConfig config) {
@@ -55,7 +56,7 @@ public class WthitPlugin implements IWailaPlugin {
             if (map.containsKey(block)) {
                 return map.get(block);
             }
-            ItemStack placer = block.getCloneItemStack(accessor.getBlockState(), accessor.getHitResult(), accessor.getWorld(), accessor.getPosition(), accessor.getPlayer());
+            ItemStack placer = block.getCloneItemStack(accessor.getBlockState(), accessor.getBlockHitResult(), accessor.getWorld(), accessor.getPosition(), accessor.getPlayer());
             ItemComponent result = new ItemComponent(placer);
             map.put(block, result);
             return result;
@@ -69,22 +70,23 @@ public class WthitPlugin implements IWailaPlugin {
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (accessor.getBlockEntity() instanceof PotionShelfBlockEntity shelf)
             {
-                int slot = PotionShelf.getPotionShelfSlot(accessor.getHitResult(), accessor.getPosition(), accessor.getSide());
+                int slot = PotionShelf.getPotionShelfSlot(accessor.getBlockHitResult(), accessor.getPosition(), accessor.getSide());
                 if (! shelf.GetItem(slot).isEmpty())
                 {
                     int count, room;
-                    if (accessor.getServerData().contains("Bottles" + slot))
+                    if (accessor.getData().raw().contains("Bottles" + slot))
                     {
-                        count = accessor.getServerData().getInt("Bottles" + slot);
-                        room = accessor.getServerData().getInt("Space" + slot);
+                        count = accessor.getData().raw().getInt("Bottles" + slot);
+                        room = accessor.getData().raw().getInt("Space" + slot);
                     }
                     else
                     {
                         count = shelf.GetRemainingItems(slot);
                         room = shelf.GetRemainingRoom(slot);
                     }
+                    ItemStack bottle = shelf.GetItem(slot);
+                    tooltip.addLine().with(new ItemComponent(bottle)).with(bottle.getHoverName());
                     tooltip.addLine(Component.translatable(message, count, count+room));
-                    tooltip.addLine(shelf.GetItem(slot).getHoverName());
                 }
                 else
                 {
@@ -96,16 +98,17 @@ public class WthitPlugin implements IWailaPlugin {
         private static final String message = "message.workshop_for_handsome_adventurer.shelf_probe_tooltip";
     }
 
-    private static class PotionShelfDataProvider implements IServerDataProvider<PotionShelfBlockEntity> {
+    private static class PotionShelfDataProvider implements IDataProvider<PotionShelfBlockEntity>
+    {
         @Override
-        public void appendServerData(CompoundTag compoundTag, IServerAccessor<PotionShelfBlockEntity> serverAccessor, IPluginConfig config) {
+        public void appendData(IDataWriter writer, IServerAccessor<PotionShelfBlockEntity> serverAccessor, IPluginConfig config) {
             int max = serverAccessor.getTarget().getNumberOfItemsInOneRow() * 2;
             for (int i = 0; i < max; i++)
             {
                 int bottles = serverAccessor.getTarget().GetRemainingItems(i);
-                compoundTag.putInt("Bottles" + i, bottles);
+                writer.raw().putInt("Bottles" + i, bottles);
                 int space = serverAccessor.getTarget().GetRemainingRoom(i);
-                compoundTag.putInt("Space" + i, space);
+                writer.raw().putInt("Space" + i, space);
             }
         }
     }
@@ -116,7 +119,7 @@ public class WthitPlugin implements IWailaPlugin {
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             if (accessor.getBlockEntity() instanceof BookShelfBlockEntity shelf)
             {
-                int slot = BookShelf.getBookShelfSlot((BookShelf) accessor.getBlock(), new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getSide(), accessor.getPosition(), false));
+                int slot = BookShelf.getBookShelfSlot((BookShelf) accessor.getBlock(), accessor.getBlockHitResult());
                 if (slot >= 0 && ! shelf.GetItem(slot).isEmpty())
                 {
                     tooltip.addLine().with(new ItemComponent(shelf.GetItem(slot))).with(shelf.GetItem(slot).getHoverName());
@@ -125,9 +128,9 @@ public class WthitPlugin implements IWailaPlugin {
                         List<Component> enchantments = this.getEnchantmentParts(shelf.GetItem(slot));
                         if (enchantments != null)
                         {
-                            for (int i = 0; i < enchantments.size(); i += 2)
+                            for (int i = 0; i < enchantments.size(); i += 1)
                             {
-                                tooltip.addLine().with(enchantments.get(i)).with(enchantments.get(i + 1));
+                                tooltip.addLine().with(enchantments.get(i));
                             }
                         }
                     }
@@ -141,9 +144,13 @@ public class WthitPlugin implements IWailaPlugin {
         @Override
         public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
             ItemStack tool = ItemStack.EMPTY;
+            if (accessor.getBlockEntity() instanceof PotionShelfBlockEntity || accessor.getBlockEntity() instanceof BookShelfBlockEntity)
+            {
+                return;
+            }
             if (accessor.getBlockEntity() instanceof ToolRackBlockEntity rack)
             {
-                int slot = ToolRack.getToolRackSlot((ToolRack) accessor.getBlock(), new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getSide(), accessor.getPosition(), false));
+                int slot = ToolRack.getToolRackSlot((ToolRack) accessor.getBlock(), accessor.getBlockHitResult());
                 tool = rack.GetItem(slot);
             }
             if (tool.isEmpty())
@@ -156,9 +163,9 @@ public class WthitPlugin implements IWailaPlugin {
                 List<Component> enchantments = this.getEnchantmentParts(tool);
                 if (enchantments != null)
                 {
-                    for (int i = 0; i < enchantments.size(); i += 2)
+                    for (int i = 0; i < enchantments.size(); i += 1)
                     {
-                        tooltip.addLine().with(enchantments.get(i)).with(enchantments.get(i + 1));
+                        tooltip.addLine().with(enchantments.get(i));
                     }
                 }
             }
@@ -172,8 +179,9 @@ public class WthitPlugin implements IWailaPlugin {
             ItemStack tool = ItemStack.EMPTY;
             if (accessor.getBlock() instanceof DualToolRack block && accessor.getBlockEntity() == null)
             {
-                ToolRackBlockEntity rack = (ToolRackBlockEntity) accessor.getWorld().getBlockEntity(accessor.getPosition().above());
-                int slot = ToolRack.getToolRackSlot(block, new BlockHitResult(accessor.getHitResult().getLocation(), accessor.getSide(), accessor.getPosition().above(), false));
+                BlockPos above = accessor.getPosition().above();
+                ToolRackBlockEntity rack = (ToolRackBlockEntity) accessor.getWorld().getBlockEntity(above);
+                int slot = ToolRack.getToolRackSlot(block, accessor.getBlockHitResult().withPosition(above));
                 tool = rack.GetItem(slot);
             }
             if (tool.isEmpty())
@@ -186,9 +194,9 @@ public class WthitPlugin implements IWailaPlugin {
                 List<Component> enchantments = this.getEnchantmentParts(tool);
                 if (enchantments != null)
                 {
-                    for (int i = 0; i < enchantments.size(); i += 2)
+                    for (int i = 0; i < enchantments.size(); i += 1)
                     {
-                        tooltip.addLine().with(enchantments.get(i)).with(enchantments.get(i + 1));
+                        tooltip.addLine().with(enchantments.get(i));
                     }
                 }
             }

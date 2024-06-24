@@ -1,16 +1,17 @@
 package moonfather.workshop_for_handsome_adventurer.integration;
 
-import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WailaBaseProvider
 {
@@ -30,28 +31,21 @@ public class WailaBaseProvider
             enchantmentCache.clear();
         }
         List<Component> result = new ArrayList<>();
-        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(item);
-        for (var e : map.entrySet())
+        ItemEnchantments enchantments = item.get(DataComponents.STORED_ENCHANTMENTS);
+        if (enchantments != null)
         {
-            result.add(Component.translatable(e.getKey().getDescriptionId()).withStyle(ChatFormatting.DARK_GRAY));
-            int level = e.getValue();
-            if (level < roman.length)
+            enchantments.addToTooltip(Item.TooltipContext.of((HolderLookup.Provider) null), result::add, TooltipFlag.NORMAL);
+        }
+        else
+        {
+            enchantments = item.get(DataComponents.ENCHANTMENTS);
+            if (enchantments != null)
             {
-                result.add(roman[level]);
-            }
-            else
-            {
-                result.add(Component.literal(" " + level).withStyle(ChatFormatting.DARK_GRAY));
+                enchantments.addToTooltip(Item.TooltipContext.of((HolderLookup.Provider) null), result::add, TooltipFlag.NORMAL);
             }
         }
         enchantmentCache.put(item.hashCode(), result);
         return result;
     }
-    private static final Component[] roman = { Component.literal(""), Component.literal(""),
-                                               Component.literal(" II").withStyle(ChatFormatting.DARK_GRAY),
-                                               Component.literal(" III").withStyle(ChatFormatting.DARK_GRAY),
-                                               Component.literal(" IV").withStyle(ChatFormatting.DARK_GRAY),
-                                               Component.literal(" V").withStyle(ChatFormatting.DARK_GRAY),
-                                               Component.literal(" VI").withStyle(ChatFormatting.DARK_GRAY) };
     private final HashMap<Integer, List<Component>> enchantmentCache = new HashMap<>(50);
 }

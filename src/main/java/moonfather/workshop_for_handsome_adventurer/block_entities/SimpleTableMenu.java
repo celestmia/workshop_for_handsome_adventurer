@@ -9,6 +9,7 @@ import moonfather.workshop_for_handsome_adventurer.blocks.SimpleTable;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import moonfather.workshop_for_handsome_adventurer.integration.TetraBeltSupport;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,6 +27,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -162,12 +164,13 @@ public class SimpleTableMenu extends AbstractContainerMenu
 		{
 			ServerPlayer serverplayer = (ServerPlayer)player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			Optional<RecipeHolder<CraftingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level);
+			CraftingInput craftinginput = craftingContainer.asCraftInput();
+			Optional<RecipeHolder<CraftingRecipe>> recipeHolder = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftinginput, level);
 			if (recipeHolder.isPresent())
 			{
 				if (resultContainer.setRecipeUsed(level, serverplayer, recipeHolder.get()))
 				{
-					itemstack = recipeHolder.get().value().assemble(craftingContainer, level.registryAccess());
+					itemstack = recipeHolder.get().value().assemble(craftinginput, level.registryAccess());
 				}
 			}
 
@@ -327,7 +330,7 @@ public class SimpleTableMenu extends AbstractContainerMenu
 
 
 
-	protected boolean moveItemStackToOccupiedSlotsOnly(ItemStack itemStack, int startingSlot, int endingSlotPlus1, boolean reverse)
+	protected boolean moveItemStackToOccupiedSlotsOnly(ItemStack itemStackBeingMoved, int startingSlot, int endingSlotPlus1, boolean reverse)
 	{
 		boolean result = false;
 		int i = startingSlot;
@@ -336,9 +339,9 @@ public class SimpleTableMenu extends AbstractContainerMenu
 			i = endingSlotPlus1 - 1;
 		}
 
-		if (itemStack.isStackable())
+		if (itemStackBeingMoved.isStackable())
 		{
-			while (! itemStack.isEmpty())
+			while (! itemStackBeingMoved.isEmpty())
 			{
 				if (reverse)
 				{
@@ -362,22 +365,22 @@ public class SimpleTableMenu extends AbstractContainerMenu
 					++i;
 				} // don't use i anymore
 				if (! slot.isActive()) { continue; }
-				ItemStack itemstack = slot.getItem();
-				if (! itemstack.isEmpty() && ItemStack.isSameItemSameTags(itemStack, itemstack))
+				ItemStack itemStackInDestination = slot.getItem();
+				if (! itemStackInDestination.isEmpty() && ItemStack.isSameItemSameComponents(itemStackBeingMoved, itemStackInDestination))
 				{
-					int j = itemstack.getCount() + itemStack.getCount();
-					int maxSize = Math.min(slot.getMaxStackSize(), itemStack.getMaxStackSize());
+					int j = itemStackInDestination.getCount() + itemStackBeingMoved.getCount();
+					int maxSize = Math.min(slot.getMaxStackSize(), itemStackBeingMoved.getMaxStackSize());
 					if (j <= maxSize)
 					{
-						itemStack.setCount(0);
-						itemstack.setCount(j);
+						itemStackBeingMoved.setCount(0);
+						itemStackInDestination.setCount(j);
 						slot.setChanged();
 						result = true;
 					}
-					else if (itemstack.getCount() < maxSize)
+					else if (itemStackInDestination.getCount() < maxSize)
 					{
-						itemStack.shrink(maxSize - itemstack.getCount());
-						itemstack.setCount(maxSize);
+						itemStackBeingMoved.shrink(maxSize - itemStackInDestination.getCount());
+						itemStackInDestination.setCount(maxSize);
 						slot.setChanged();
 						result = true;
 					}
@@ -663,7 +666,7 @@ public class SimpleTableMenu extends AbstractContainerMenu
 			{
 				if (! bcbe.hasCustomName() || ! bcbe.getCustomName().getString().equals(newName))
 				{
-					bcbe.setCustomName(Component.literal(newName));
+					bcbe.name = Component.literal(newName);
 					player.giveExperienceLevels(-1);
 				}
 			}
@@ -671,14 +674,14 @@ public class SimpleTableMenu extends AbstractContainerMenu
 		else if (this.inventoryAccessHelper.currentType.equals(InventoryAccessHelper.RecordTypes.TOOLBELT))
 		{
 			ItemStack s = (ItemStack) TetraBeltSupport.findToolbelt(player);
-			s.setHoverName(Component.literal(newName));
+			s.set(DataComponents.CUSTOM_NAME, Component.literal(newName));
 			player.giveExperienceLevels(-1);
 		}
 		else if (this.inventoryAccessHelper.currentType.equals(InventoryAccessHelper.RecordTypes.LEGGINGS) || this.inventoryAccessHelper.currentType.equals(InventoryAccessHelper.RecordTypes.CHESTSLOT)
 				|| this.inventoryAccessHelper.currentType.equals(InventoryAccessHelper.RecordTypes.BACKSLOT) || this.inventoryAccessHelper.currentType.equals(InventoryAccessHelper.RecordTypes.FLOATING))
 		{
 			ItemStack s = InventoryAccessHelper.getItemFromNamedSlot(player, this.inventoryAccessHelper.currentType);
-			s.setHoverName(Component.literal(newName));
+			s.set(DataComponents.CUSTOM_NAME, Component.literal(newName));
 			player.giveExperienceLevels(-1);
 		}
 	}
@@ -779,9 +782,9 @@ public class SimpleTableMenu extends AbstractContainerMenu
 
 	public static class CustomizationSlot extends Slot
 	{
-		private static final TagKey<Item> ChestTag = TagKey.create(Registries.ITEM, new ResourceLocation("forge:chests"));
-		private static final TagKey<Item> LanternTag = TagKey.create(Registries.ITEM, new ResourceLocation(Constants.MODID, "lanterns"));
-		private static final ResourceLocation EMPTY_SLOT_BG = new ResourceLocation(Constants.MODID, "gui/c_slot");
+		private static final TagKey<Item> ChestTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "chests"));
+		private static final TagKey<Item> LanternTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "lanterns"));
+		private static final ResourceLocation EMPTY_SLOT_BG = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/c_slot");
 
 
 		public CustomizationSlot(Container p_39521_, int p_39522_, int p_39523_, int p_39524_)
@@ -808,7 +811,7 @@ public class SimpleTableMenu extends AbstractContainerMenu
 		{
 			if (accessItem == null)
 			{
-				accessItem = BuiltInRegistries.ITEM.get(new ResourceLocation(CommonConfig.AccessCustomizationItem.get()));
+				accessItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(CommonConfig.AccessCustomizationItem.get()));
 				if (accessItem.equals(Items.AIR)) { accessItem = Items.NAME_TAG; }
 			}
 			return accessItem;

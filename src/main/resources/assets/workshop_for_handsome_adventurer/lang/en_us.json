@@ -152,5 +152,6 @@
 	"config.jade.plugin_workshop_for_handsome_adventurer.jade_plugin2" : "Jade config for WfHA",
 	"config.jade.plugin_workshop_for_handsome_adventurer.jade_plugin3" : "Jade config for WfHA",
 	"alias.emi.workbench": "Workbench",
-	"tag.item.forge.workbench": "Workbenches"
+	"tag.item.forge.workbench": "Workbenches",
+	"tag.item.c.player_workstations.crafting_tables": "Workbenches"
 }

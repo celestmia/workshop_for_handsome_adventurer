@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "",
+  "pattern": [
+    "pp",
+    "pp"
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:dark_oak_planks"
+    }
+  },
+  "result": {
+    "id": "workshop_for_handsome_adventurer:simple_table_dark_oak",
+    "count": 1
+  },
+  "neoforge:conditions":
+  [
+    {
+      "type": "workshop_for_handsome_adventurer:optional",
+      "flag_code": "replace_vanilla_crafting_table"
+    }
+  ]
+}

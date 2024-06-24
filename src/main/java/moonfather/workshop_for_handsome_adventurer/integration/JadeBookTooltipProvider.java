@@ -41,5 +41,5 @@ public class JadeBookTooltipProvider extends JadeBaseTooltipProvider implements 
 
     @Override
     public ResourceLocation getUid() {  return this.pluginId;  }
-    private final ResourceLocation pluginId = new ResourceLocation(Constants.MODID, "jade_plugin2");
+    private final ResourceLocation pluginId = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "jade_plugin2");
 }

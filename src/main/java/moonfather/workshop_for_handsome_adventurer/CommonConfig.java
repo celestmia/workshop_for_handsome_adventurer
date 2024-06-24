@@ -20,6 +20,7 @@ public class CommonConfig
     public static final ModConfigSpec.ConfigValue<Integer> SlotRoomMultiplier;
     public static final ModConfigSpec.ConfigValue<Integer> SlotRoomMaximum;
     public static final ModConfigSpec.BooleanValue OffhandInteractsWithToolRack;
+    public static final ModConfigSpec.BooleanValue OffhandInteractsWithPotionShelf;
     static final ModConfigSpec SPEC;
 
 
@@ -48,6 +49,9 @@ public class CommonConfig
             SlotRoomMaximum = BUILDER
                 .comment("This is a total maximum of number of bottles that fit in a single potion shelf slot. Whatever above math gives you will be clipped to fit this value.")
                 .defineInRange("Maximum number of potions that fit into one shelf slot", defaultSlotRoomMaximum, 1, 64);
+        OffhandInteractsWithPotionShelf = BUILDER
+                .comment("If set to false, you need to move a bottle from off-hand to main hand (F) before putting it onto a shelf, it's simpler but needs extra actions. If you set this to true you can put bottles from off-hand to potion shelf directly and you can take items directly; quicker but there might be possible unintended interactions with the shelf.")
+                .define("Offhand interacts with tool rack directly", defaultOffhandInteractsWithToolRack);
         BUILDER.pop();
         BUILDER.push("Tool racks");
             OffhandInteractsWithToolRack = BUILDER

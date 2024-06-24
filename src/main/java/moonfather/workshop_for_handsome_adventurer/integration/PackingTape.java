@@ -11,7 +11,7 @@ public class PackingTape
     public static boolean isTape(ItemStack stack) {
         if (! checkInitialized) {
             if (ModList.get().isLoaded("packingtape")) {
-                tape = BuiltInRegistries.ITEM.get(new ResourceLocation("packingtape", "tape"));
+                tape = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("packingtape", "tape"));
             }
             checkInitialized = true;
         }

@@ -11,7 +11,7 @@ public class Constants
 
     public static class Tags
     {
-        public static final TagKey<Item> NOT_ALLOWED_ON_TOOLRACK = TagKey.create(Registries.ITEM, new ResourceLocation(Constants.MODID, "dont_allow_onto_toolrack"));
-        public static final TagKey<Item> ALLOWED_ON_POTION_SHELF = TagKey.create(Registries.ITEM, new ResourceLocation(Constants.MODID, "allowed_on_potion_shelf"));
+        public static final TagKey<Item> NOT_ALLOWED_ON_TOOLRACK = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "dont_allow_onto_toolrack"));
+        public static final TagKey<Item> ALLOWED_ON_POTION_SHELF = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "allowed_on_potion_shelf"));
     }
 } 

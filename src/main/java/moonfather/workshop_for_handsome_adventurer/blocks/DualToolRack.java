@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.fml.ModList;
@@ -76,6 +77,7 @@ public class DualToolRack extends ToolRack
 
 
 
+    @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity entity, ItemStack itemStack)
     {
         level.setBlock(pos.below(), state.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER).setValue(DualTableBaseBlock.BEING_PLACED, false), 3);
@@ -84,6 +86,7 @@ public class DualToolRack extends ToolRack
 
 
 
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos pos2, boolean something)
     {
         super.neighborChanged(state, level, pos, block, pos2, something);
@@ -95,6 +98,7 @@ public class DualToolRack extends ToolRack
 
 
 
+    @Override
     public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos)
     {
         BlockPos back = pos.relative(state.getValue(FACING));

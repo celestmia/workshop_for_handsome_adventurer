@@ -11,28 +11,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlockItemEx extends BlockItem
 {
-	public BlockItemEx(Block block, Properties properties)
-	{
-		super(block, properties);
-		if (block instanceof ToolRack && ! (block instanceof DualToolRack))
-		{
-			burnTime = 300;
-		}
-		else
-		{
-			burnTime = 900;
-		}
-		this.isSmallTable = block instanceof SimpleTable;
-	}
+    public BlockItemEx(Block block, Properties properties)
+    {
+        super(block, properties);
+        if (block instanceof ToolRack && ! (block instanceof DualToolRack))
+        {
+            burnTime = 200;
+        }
+        else
+        {
+            burnTime = 900;
+        }
+    }
 
 
-	public boolean isTable() { return this.isSmallTable; }
-
-	private final boolean isSmallTable;
-	private int burnTime = 300; //plank is 300
-	@Override
-	public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
-	{
-		return burnTime;
-	}
+    private int burnTime = 300; //plank is 300
+    @Override
+    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
+    {
+        return burnTime;
+    }
 }

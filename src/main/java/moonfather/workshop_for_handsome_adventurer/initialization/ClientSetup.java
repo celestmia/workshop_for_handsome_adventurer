@@ -3,6 +3,7 @@ package moonfather.workshop_for_handsome_adventurer.initialization;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screens.DualTableCraftingScreen;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screens.SimpleTableCraftingScreen;
 import moonfather.workshop_for_handsome_adventurer.block_entities.renderers.*;
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.FinderEvents;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -11,6 +12,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup
@@ -43,4 +45,12 @@ public class ClientSetup
 	}
 
 	// two slot textures are in minecraft's block atlas. i wanted to add my own, but it's way too much trouble.
+
+
+
+	@SubscribeEvent
+	public static void AddClientPack(final AddPackFindersEvent event)
+	{
+		FinderEvents.addClientPack(event);
+	}
 }

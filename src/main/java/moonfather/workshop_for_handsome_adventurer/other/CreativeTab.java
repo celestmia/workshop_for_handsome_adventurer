@@ -1,5 +1,6 @@
 package moonfather.workshop_for_handsome_adventurer.other;
 
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.SecondCreativeTab;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,12 +10,13 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 public class CreativeTab
 {
-    public static void OnCreativeTabPopulation(BuildCreativeModeTabContentsEvent event)
+    public static void onCreativeTabPopulation(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTab() == Registration.CREATIVE_TAB.get())
         {
             int i = 0;
-            for (String woodType: Registration.woodTypes) {
+            for (String woodType: Registration.woodTypes)
+            {
                 event.accept(Registration.items_table1.get(i).get());
                 event.accept(Registration.items_table2.get(i).get());
                 event.accept(Registration.items_rack1.get(i).get());
@@ -30,6 +32,7 @@ public class CreativeTab
                 i++;
             }
         }
+        SecondCreativeTab.onCreativeTabPopulation(event);
     }
 
 

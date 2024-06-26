@@ -70,20 +70,22 @@ public class Registration
 	public static final List<Supplier<Item>> items_bshelf4 = new ArrayList<>();
 	public static final List<Supplier<Item>> items_bshelf5 = new ArrayList<>();
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public static final String[] woodTypes = {"oak", "spruce", "jungle", "birch", "dark_oak", "mangrove", "cherry"};
+	public static final List<String> woodTypes = List.of("oak", "spruce", "jungle", "birch", "dark_oak", "mangrove", "cherry");
 
 	// static initialization
 	static {
 		String id;
 		// small tables
-		for (String woodType: Registration.woodTypes) {
+		for (String woodType: Registration.woodTypes)
+		{
 			id = "simple_table_" + woodType;
 			Supplier<Block> block = BLOCKS.register(id, () -> new SimpleTable());
 			blocks_table1.add(block);
 			items_table1.add(FromBlock(block, id));
 		}
 		// dual tables
-		for (String woodType: Registration.woodTypes) {
+		for (String woodType: Registration.woodTypes)
+		{
 			Supplier<Block> primary = BLOCKS.register("dual_table_bottom_left_" + woodType, () -> new AdvancedTableBottomPrimary());
 			BLOCKS.register("dual_table_bottom_right_" + woodType, () -> new AdvancedTableBottomSecondary());
 			BLOCKS.register("dual_table_top_left_" + woodType, () -> new AdvancedTableTopSecondary());
@@ -91,10 +93,10 @@ public class Registration
 			Supplier<Item> placer = ITEMS.register("workstation_placer_" + woodType, () -> new WorkstationPlacerItem(woodType));
 			items_table2.add(placer);
 			blocks_table2.add(primary);
-			ExternalWoodSupport.registerHostMod(woodType, Constants.MODID);
 		}
 		// toolracks
-		for (String woodType: Registration.woodTypes) {
+		for (String woodType: Registration.woodTypes)
+		{
 			Supplier<Block> rack;
 			id = "tool_rack_single_" + woodType;
 			rack = BLOCKS.register(id, () -> ToolRack.create(2, "single"));
@@ -114,14 +116,16 @@ public class Registration
 			blocks_rack.add(rack);
 		}
 		// potion shelves
-		for (String woodType: Registration.woodTypes) {
+		for (String woodType: Registration.woodTypes)
+		{
 			id = "potion_shelf_" + woodType;
 			Supplier<Block> shelf = BLOCKS.register(id, () -> new PotionShelf());
 			items_pshelf.add(FromBlock(shelf, id));
 			blocks_pshelf.add(shelf);
 		}
 		// book shelves
-		for (String woodType: Registration.woodTypes) {
+		for (String woodType: Registration.woodTypes)
+		{
 			Supplier<Block> rack;
 			id = "book_shelf_double_" + woodType;
 			rack = BLOCKS.register(id, () -> new BookShelf.Dual("double"));
@@ -154,9 +158,11 @@ public class Registration
 		return ITEMS.register(id, () -> new BlockItemEx(block.get(), properties));
 	}
 
-	private static Block[] ListToArray(List<Supplier<Block>> list) {
+	private static Block[] ListToArray(List<Supplier<Block>> list)
+	{
 		Block[] result = new Block[list.size()];
-		for (int i = 0; i < list.size(); i++) {
+		for (int i = 0; i < list.size(); i++)
+		{
 			result[i] = list.get(i).get();
 		}
 		return result;

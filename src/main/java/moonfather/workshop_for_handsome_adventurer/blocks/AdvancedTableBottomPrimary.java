@@ -2,7 +2,6 @@ package moonfather.workshop_for_handsome_adventurer.blocks;
 
 import moonfather.workshop_for_handsome_adventurer.block_entities.DualTableBlockEntity;
 import moonfather.workshop_for_handsome_adventurer.block_entities.DualTableMenu;
-import moonfather.workshop_for_handsome_adventurer.initialization.ExternalWoodSupport;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -113,9 +112,11 @@ public class AdvancedTableBottomPrimary extends DualTableBaseBlock implements En
 	@Override
 	public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
 	{
-		String wood = BuiltInRegistries.BLOCK.getKey(this).getPath();
-		wood = wood.substring(wood.indexOf("_left_") + 6);
-		return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(ExternalWoodSupport.getHostMod(wood), ExternalWoodSupport.getPrefix(wood) + "workstation_placer_" + wood)));
+		ResourceLocation block = BuiltInRegistries.BLOCK.getKey(this);
+		String path = block.getPath();
+		String wood = path.substring(path.indexOf("_left_") + 6);
+		String prefix = path.substring(0, path.indexOf("dual_table_bottom_left_"));
+		return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(block.getNamespace(), prefix + "workstation_placer_" + wood)));
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////

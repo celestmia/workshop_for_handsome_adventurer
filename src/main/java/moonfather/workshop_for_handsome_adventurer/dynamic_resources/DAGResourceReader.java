@@ -1,0 +1,67 @@
+package moonfather.workshop_for_handsome_adventurer.dynamic_resources;
+
+import dev.lukebemish.dynamicassetgenerator.api.DataResourceCache;
+import dev.lukebemish.dynamicassetgenerator.api.ResourceCache;
+import dev.lukebemish.dynamicassetgenerator.api.ResourceGenerationContext;
+import dev.lukebemish.dynamicassetgenerator.api.client.AssetResourceCache;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+public class DAGResourceReader extends AssetReader
+{
+    public DAGResourceReader(PackType packType, String namespace)
+    {
+        this.packType = packType;
+        this.namespace = namespace;
+    }
+
+    private final PackType packType;
+    private final String namespace;
+
+    ////////////////
+
+    private ResourceCache cache = null;
+    private ResourceGenerationContext context = null;
+
+    private void initContext()
+    {
+        if (this.context == null)
+        {
+            if (packType.equals(PackType.SERVER_DATA))
+            {
+                this.cache = ResourceCache.register(new DataResourceCache(ResourceLocation.fromNamespaceAndPath(namespace, "data")));
+                this.context = this.cache.makeContext(true);
+            }
+            else
+            {
+                this.cache = ResourceCache.register(new AssetResourceCache(ResourceLocation.fromNamespaceAndPath(namespace, "assets")));
+                this.context = this.cache.makeContext(true);
+            }
+        }
+    }
+
+    @Override
+    public InputStream getStream(ResourceLocation location)
+    {
+        this.initContext();
+        IoSupplier<InputStream> sup =  this.context.getResourceSource().getResource(location);
+        if (sup != null)
+        {
+            try
+            {
+                return sup.get();
+            }
+            catch (IOException e)
+            {
+                return null;
+            }
+        }
+        return null;
+    }
+}

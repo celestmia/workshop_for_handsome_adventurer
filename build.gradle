@@ -151,6 +151,11 @@ dependencies {
 	
 	// curios is not put for 1.21 yet, using 1.20.6
 	compileOnly "curse.maven:curios-309927:5443145"
+
+    implementation "curse.maven:dynamic-asset-generator-577096:5471770"
+    runtimeOnly "curse.maven:biomes-o-plenty-220318:5437861"
+    runtimeOnly "curse.maven:terrablender-neoforge-940057:5429865"
+    runtimeOnly "curse.maven:glitchcore-955399:5429863"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

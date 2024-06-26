@@ -4,6 +4,6 @@
         "particle": "minecraft:block/dark_oak_planks",
         "plank": "minecraft:block/dark_oak_planks",
         "thingy": "minecraft:block/light_gray_terracotta",
-        "stripped_log": "block/stripped_dark_oak_log"
+        "stripped_log": "minecraft:block/stripped_dark_oak_log"
     }
 }

@@ -3,11 +3,11 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"crafting_table_top": "block/crafting_table_top",
-		"oak_planks": "block/oak_planks",
-		"stripped_dark_oak_log": "block/stripped_dark_oak_log",
-		"anvil": "block/anvil",
-		"stripped_oak_log": "block/stripped_oak_log",
+		"crafting_table_top": "minecraft:block/crafting_table_top",
+		"oak_planks": "minecraft:block/oak_planks",
+		"stripped_dark_oak_log": "minecraft:block/stripped_dark_oak_log",
+		"anvil": "minecraft:block/anvil",
+		"stripped_oak_log": "minecraft:block/stripped_oak_log",
 		"particle": "#oak_planks"
 	},
 	"elements": [

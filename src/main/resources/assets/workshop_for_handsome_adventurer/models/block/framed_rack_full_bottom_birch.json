@@ -4,6 +4,6 @@
         "particle": "minecraft:block/birch_planks",
         "plank": "minecraft:block/birch_planks",
         "thingy": "minecraft:block/white_terracotta",
-        "stripped_log": "block/stripped_birch_log"
+        "stripped_log": "minecraft:block/stripped_birch_log"
     }
 }

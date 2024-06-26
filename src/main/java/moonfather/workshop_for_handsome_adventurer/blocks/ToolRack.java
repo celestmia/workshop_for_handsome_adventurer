@@ -197,7 +197,7 @@ public class ToolRack extends Block implements EntityBlock
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState blockState)
     {
-        if (!blockState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) || blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+        if (! blockState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) || blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
         {
             return Registration.TOOL_RACK_BE.get().create(pos, blockState);
         }
@@ -219,7 +219,7 @@ public class ToolRack extends Block implements EntityBlock
     public void neighborChanged(BlockState state, Level level, BlockPos rackPos, Block block, BlockPos wallPos, boolean something)
     {
         super.neighborChanged(state, level, rackPos, block, wallPos, something);
-        if (!this.canSurvive(state, level, rackPos))
+        if (! this.canSurvive(state, level, rackPos))
         {
             level.destroyBlock(rackPos, true);
         }
@@ -270,9 +270,9 @@ public class ToolRack extends Block implements EntityBlock
         ItemStack existing = BE.GetItem(slot);
         ItemStack itemInMainHand = player.getMainHandItem();
         ItemStack itemInOffHand = player.getOffhandItem();
-        if (existing.isEmpty() && !itemInMainHand.isEmpty())
+        if (existing.isEmpty() && ! itemInMainHand.isEmpty())
         {
-            if (!this.canDepositItem(itemInMainHand))
+            if (! this.canDepositItem(itemInMainHand))
             {
                 player.displayClientMessage(RackMessage, true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
@@ -284,13 +284,13 @@ public class ToolRack extends Block implements EntityBlock
             itemInMainHand.shrink(1);
             player.playSound(SoundEvents.WOOD_PLACE, 0.5f, 0.7f);
         }
-        else if (existing.isEmpty() && itemInMainHand.isEmpty() && (!doOffhand || itemInOffHand.isEmpty()))
+        else if (existing.isEmpty() && itemInMainHand.isEmpty() && (! doOffhand || itemInOffHand.isEmpty()))
         {
             //System.out.println("~~~~~EMPTY TO EMPTY");
         }
-        else if (existing.isEmpty() && itemInMainHand.isEmpty() && doOffhand && !itemInOffHand.isEmpty())
+        else if (existing.isEmpty() && itemInMainHand.isEmpty() && doOffhand && ! itemInOffHand.isEmpty())
         {
-            if (!this.canDepositItem(itemInOffHand))
+            if (! this.canDepositItem(itemInOffHand))
             {
                 player.displayClientMessage(RackMessage, true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
@@ -302,7 +302,7 @@ public class ToolRack extends Block implements EntityBlock
             itemInOffHand.shrink(1);
             player.playSound(SoundEvents.WOOD_PLACE, 0.5f, 0.7f);
         }
-        else if (!existing.isEmpty() && itemInMainHand.isEmpty() && itemInOffHand.isEmpty() && existing.canPerformAction(ToolActions.SHIELD_BLOCK))
+        else if (! existing.isEmpty() && itemInMainHand.isEmpty() && itemInOffHand.isEmpty() && existing.canPerformAction(ToolActions.SHIELD_BLOCK))
         {
             //System.out.println("~~~~~TAKEN SHIELD");
             //player.addItem(existing);
@@ -310,17 +310,17 @@ public class ToolRack extends Block implements EntityBlock
             BE.ClearItem(slot);
             player.playSound(SoundEvents.ITEM_PICKUP, 0.5f, 1);
         }
-        else if (!existing.isEmpty() && itemInMainHand.isEmpty())
+        else if (! existing.isEmpty() && itemInMainHand.isEmpty())
         {
             //System.out.println("~~~~~TAKEN WITH MAIN");
             player.setItemInHand(InteractionHand.MAIN_HAND, existing);
             BE.ClearItem(slot);
             player.playSound(SoundEvents.ITEM_PICKUP, 0.5f, 1);
         }
-        else if (!existing.isEmpty() && !itemInMainHand.isEmpty() && doOffhand && itemInOffHand.isEmpty())
+        else if (! existing.isEmpty() && ! itemInMainHand.isEmpty() && doOffhand && itemInOffHand.isEmpty())
         {
             //System.out.println("~~~~~TAKEN WITH OFFHAND");
-            if (!itemInMainHand.canPerformAction(ToolActions.SHIELD_BLOCK))
+            if (! itemInMainHand.canPerformAction(ToolActions.SHIELD_BLOCK))
             {
                 player.setItemInHand(InteractionHand.OFF_HAND, existing); // normal
             }

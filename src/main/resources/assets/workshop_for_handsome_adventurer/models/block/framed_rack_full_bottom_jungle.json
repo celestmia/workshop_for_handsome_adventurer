@@ -4,6 +4,6 @@
         "particle": "minecraft:block/jungle_planks",
         "plank": "minecraft:block/jungle_planks",
         "thingy": "minecraft:block/white_terracotta",
-        "stripped_log": "block/stripped_jungle_log"
+        "stripped_log": "minecraft:block/stripped_jungle_log"
     }
 }

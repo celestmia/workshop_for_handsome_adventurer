@@ -105,22 +105,13 @@ public class PotionShelf extends ToolRack
     private final MutableComponent WrongPotionMessage = Component.translatable("message.workshop_for_handsome_adventurer.shelf_wrong_potion");
 
 
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
-    {
-//        if (hand == InteractionHand.OFF_HAND)
-//        {
-//            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-//        }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-    }
 
     @Override
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos pos, Player player, BlockHitResult blockHitResult)
     {
-        if (!this.canDepositItem(player.getMainHandItem())
+        if (! this.canDepositItem(player.getMainHandItem())
                 &&
-                !(CommonConfig.OffhandInteractsWithPotionShelf.isTrue() && this.canDepositItem(player.getOffhandItem())))
+                ! (CommonConfig.OffhandInteractsWithPotionShelf.isTrue() && this.canDepositItem(player.getOffhandItem())))
         {
             player.displayClientMessage(ShelfMessage, true);
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -139,11 +130,11 @@ public class PotionShelf extends ToolRack
         }
         PotionShelfBlockEntity BE = ((PotionShelfBlockEntity) level.getBlockEntity(pos));
         ItemStack existing = BE.GetItem(slot);
-        if (existing.isEmpty() && ((!player.getMainHandItem().isEmpty() && this.canDepositItem(player.getMainHandItem()))
-                || (!player.getOffhandItem().isEmpty() && this.canDepositItem(player.getOffhandItem()))))
+        if (existing.isEmpty() && ((! player.getMainHandItem().isEmpty() && this.canDepositItem(player.getMainHandItem()))
+                || (CommonConfig.OffhandInteractsWithPotionShelf.isTrue() && ! player.getOffhandItem().isEmpty() && this.canDepositItem(player.getOffhandItem()))))
         {
             //System.out.println("~~~~~DEPOSIT TO EMPTY");
-            if (this.canDepositItem(player.getMainHandItem()) && !player.getMainHandItem().isEmpty())
+            if (this.canDepositItem(player.getMainHandItem()) && ! player.getMainHandItem().isEmpty())
             {
                 if (player.getMainHandItem().getMaxStackSize() > 1 && player.isCrouching())
                 {
@@ -169,7 +160,7 @@ public class PotionShelf extends ToolRack
             MutableComponent remainingRoomMessage = Component.translatable("message.workshop_for_handsome_adventurer.shelf_remaining_room");
             player.displayClientMessage(remainingRoomMessage.append(BE.GetRemainingRoom(slot).toString()), true);
         }
-        else if (existing.isEmpty() && player.getMainHandItem().isEmpty() && player.getOffhandItem().isEmpty())
+        else if (existing.isEmpty() && player.getMainHandItem().isEmpty() && (CommonConfig.OffhandInteractsWithPotionShelf.isFalse() || player.getOffhandItem().isEmpty()))
         {
             //System.out.println("~~~~~EMPTY TO EMPTY");
         }
@@ -191,7 +182,7 @@ public class PotionShelf extends ToolRack
                 player.displayClientMessage(remainingRoomMessage.append(BE.GetRemainingRoom(slot).toString()), true);
             }
         }
-        else if (!existing.isEmpty() && player.getMainHandItem().isEmpty())
+        else if (! existing.isEmpty() && player.getMainHandItem().isEmpty())
         {
             if (existing.getMaxStackSize() > 1 && player.isCrouching())
             {
@@ -251,7 +242,7 @@ public class PotionShelf extends ToolRack
                     player.displayClientMessage(remainingItemsMessage.append(BE.GetRemainingItems(slot).toString()), true);
                 }
             }
-            else if (!player.getOffhandItem().isEmpty() && CommonConfig.OffhandInteractsWithPotionShelf.isTrue() && ItemStack.isSameItemSameComponents(existing, player.getOffhandItem()))
+            else if (! player.getOffhandItem().isEmpty() && CommonConfig.OffhandInteractsWithPotionShelf.isTrue() && ItemStack.isSameItemSameComponents(existing, player.getOffhandItem()))
             {
                 if (BE.IsSlotMaxed(slot))
                 {
@@ -286,7 +277,7 @@ public class PotionShelf extends ToolRack
             BlockState state = event.getLevel().getBlockState(event.getPos());
             if (state.getBlock() instanceof PotionShelf && event.getFace() == state.getValue(FACING).getOpposite())
             {
-                if (!event.getEntity().getMainHandItem().isEmpty())
+                if (! event.getEntity().getMainHandItem().isEmpty())
                 {
                     event.setUseBlock(TriState.TRUE);
                 }
@@ -324,14 +315,14 @@ public class PotionShelf extends ToolRack
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
     {
         PotionShelfBlockEntity BE = ((PotionShelfBlockEntity) level.getBlockEntity(pos));
-        if (BE == null || !state.hasProperty(FACING))
+        if (BE == null || ! state.hasProperty(FACING))
         {
             return Items.STICK.getDefaultInstance();
         }
         BlockHitResult bhr = new BlockHitResult(target.getLocation(), state.getValue(FACING).getOpposite(), pos, true);
         int slot = PotionShelf.getPotionShelfSlot(bhr);
         ItemStack existing = BE.GetItem(slot);
-        if (!existing.isEmpty())
+        if (! existing.isEmpty())
         {
             return existing.copy();
         }

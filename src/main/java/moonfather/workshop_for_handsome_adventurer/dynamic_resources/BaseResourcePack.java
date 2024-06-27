@@ -36,7 +36,8 @@ public abstract class BaseResourcePack implements PackResources
     ////////////////////////////////////
 
     protected abstract void buildResources(Map<ResourceLocation, String> cache);
-    protected abstract boolean isNotOurRecipe(String namespace);
+    protected abstract boolean isNotOurNamespace(String namespace);
+    protected abstract boolean isNotOurThing(String path);
 
     ////////////////////////////////////////////////////////////
 
@@ -67,7 +68,8 @@ public abstract class BaseResourcePack implements PackResources
     @Override
     public IoSupplier<InputStream> getResource(PackType type, ResourceLocation location)
     {
-        if (this.isNotOurRecipe(location.getNamespace())) { return null; }
+        if (this.isNotOurNamespace(location.getNamespace())) { return null; }
+        if (this.isNotOurThing(location.getPath())) { return null; }
         if (this.namespaces == null && ! (location.getNamespace().equals(Constants.MODID) && (location.getPath().contains("spruce") || location.getPath().contains("en_us"))))
         {
             this.buildOnDemand(); // so normally we do, but we allow this one to pass.
@@ -84,7 +86,8 @@ public abstract class BaseResourcePack implements PackResources
     @Override
     public void listResources(PackType type, String namespace, String path, ResourceOutput output)
     {
-        if (this.isNotOurRecipe(namespace)) { return; }
+        if (this.isNotOurNamespace(namespace)) { return; }
+        if (this.isNotOurThing(path)) { return; }
         if (type == this.type)
         {
             this.buildOnDemand();

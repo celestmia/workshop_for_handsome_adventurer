@@ -14,6 +14,7 @@ public class DynamicAssetClientConfig
     public static final ModConfigSpec.ConfigValue<String> TextureTemplate1List;
     public static final ModConfigSpec.ConfigValue<String> TextureTemplate2List;
     public static final ModConfigSpec.ConfigValue<String> UseDarkerWorkstationModel;
+    public static final ModConfigSpec.BooleanValue UseDAG;
     public static final ModConfigSpec SPEC;
 
 
@@ -43,6 +44,11 @@ public class DynamicAssetClientConfig
             UseDarkerWorkstationModel = BUILDER
                     .comment("Slightly different model. Do not worry about this. Or just list dark woods here.")
                     .define("Use darker workstation model", "embur,hellbark,bulbis,cika,lament,dead,blackwood");
+        BUILDER.pop();
+        BUILDER.push("Autosearching method");
+            UseDAG = BUILDER
+                    .comment("Use the DAG mod to obtain models and textures. There is a backup system, clearly, but DAG should work for cases when this mods resources are overridden by resource packs. Game loading speed may vary.")
+                    .define("Use Dynamic Asset Generator", false);
         BUILDER.pop();
         BUILDER.pop();
         SPEC = BUILDER.build();

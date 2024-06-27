@@ -1,5 +1,6 @@
 package moonfather.workshop_for_handsome_adventurer.dynamic_resources;
 
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetClientConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.neoforged.fml.ModList;
@@ -19,7 +20,7 @@ public abstract class AssetReader
         {
             if (serverReader == null)
             {
-                if (false/*ModList.get().isLoaded("dynamic_asset_generator")*/)
+                if (DynamicAssetClientConfig.UseDAG.isTrue() && ModList.get().isLoaded("dynamic_asset_generator"))
                 {
                     serverReader = new DAGResourceReader(packType, namespace);
                 }
@@ -34,7 +35,7 @@ public abstract class AssetReader
         {
             if (clientReader == null)
             {
-                if (false/*ModList.get().isLoaded("dynamic_asset_generator")*/)
+                if (DynamicAssetClientConfig.UseDAG.isTrue() && ModList.get().isLoaded("dynamic_asset_generator"))
                 {
                     clientReader = new DAGResourceReader(packType, namespace);
                 }

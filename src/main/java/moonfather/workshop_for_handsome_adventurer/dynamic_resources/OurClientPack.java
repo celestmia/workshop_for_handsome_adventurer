@@ -135,9 +135,15 @@ public class OurClientPack extends BaseResourcePack
     }
 
     @Override
-    protected boolean isNotOurRecipe(String namespace)
+    protected boolean isNotOurNamespace(String namespace)
     {
         return ! namespace.equals(Constants.MODID) && ! namespace.equals("tetra_tables");
+    }
+
+    @Override
+    protected boolean isNotOurThing(String path)
+    {
+        return ! path.startsWith("blockstates") && ! path.startsWith("models") && ! path.startsWith("textures") && ! path.startsWith("lang");
     }
 
     //////////////////////////////////

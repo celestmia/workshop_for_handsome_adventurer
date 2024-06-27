@@ -35,7 +35,7 @@ public class WoodTypeClientManager
         {
             if (DynamicAssetClientConfig.autoSearchEnabled())
             {
-                if (/*false*/ModList.get().isLoaded("dynamic_asset_generator"))
+                if (DynamicAssetClientConfig.UseDAG.isTrue() && ModList.get().isLoaded("dynamic_asset_generator"))
                 {
                     textureFinder = TextureAutoFinderDAG.create();
                 }

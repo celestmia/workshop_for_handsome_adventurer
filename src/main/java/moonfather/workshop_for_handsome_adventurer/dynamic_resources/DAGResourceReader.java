@@ -36,13 +36,12 @@ public class DAGResourceReader extends AssetReader
             if (packType.equals(PackType.SERVER_DATA))
             {
                 this.cache = ResourceCache.register(new DataResourceCache(ResourceLocation.fromNamespaceAndPath(namespace, "data")));
-                this.context = this.cache.makeContext(true);
             }
             else
             {
                 this.cache = ResourceCache.register(new AssetResourceCache(ResourceLocation.fromNamespaceAndPath(namespace, "assets")));
-                this.context = this.cache.makeContext(true);
             }
+            this.context = this.cache.makeContext(true).withResourceSource(ResourceGenerationContext.ResourceSource.filtered((s) -> true, packType));
         }
     }
 

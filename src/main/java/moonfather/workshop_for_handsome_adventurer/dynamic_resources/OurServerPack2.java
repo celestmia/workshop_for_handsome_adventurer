@@ -44,10 +44,13 @@ public class OurServerPack2  extends BaseResourcePack
 
 
     @Override
-    protected boolean isNotOurRecipe(String namespace)
+    protected boolean isNotOurNamespace(String namespace)
     {
         return ! namespaces.contains(namespace);
     }
+
+    @Override
+    protected boolean isNotOurThing(String path) { return ! path.startsWith("tags"); }
 
     @Override
     public Set<String> getNamespaces(PackType type)

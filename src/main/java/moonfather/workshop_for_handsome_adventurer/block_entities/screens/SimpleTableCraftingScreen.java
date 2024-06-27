@@ -34,11 +34,13 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	private final InventoryAccessComponent inventoryComponent = new InventoryAccessComponent();
 	protected int renderLeftPos;
 
-	public SimpleTableCraftingScreen(SimpleTableMenu p_98448_, Inventory p_98449_, Component p_98450_) {
+	public SimpleTableCraftingScreen(SimpleTableMenu p_98448_, Inventory p_98449_, Component p_98450_)
+	{
 		super(p_98448_, p_98449_, p_98450_);
 	}
 
-	protected void init() {
+	protected void init()
+	{
 		super.init();
 		this.inventoryComponent.init(this, this.width < 400);
 		this.setPositionsX();
@@ -55,7 +57,8 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	}
 
 	@Override
-	public int getXSize() {
+	public int getXSize()
+	{
 		int leftPanel = this.inventoryComponent.getWidth();
 		return imageWidth + leftPanel + (leftPanel > 0 ? 2 : 0);
 	}
@@ -67,17 +70,24 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int p_98480_, int p_98481_, float p_98482_) {
+	public void render(GuiGraphics graphics, int p_98480_, int p_98481_, float p_98482_)
+	{
 		super.render(graphics, p_98480_, p_98481_, p_98482_);
 
 		// super.render() calls renderSlot() only for active slot. we want to draw X over inactive slots
-		if (this.inventoryComponent.isVisibleTotal()) {
-			for (int k = SimpleTableMenu.ACCESS_SLOT_START; k <= SimpleTableMenu.ACCESS_SLOT_END; k++) {
-				if (this.menu.slots.get(k) instanceof SimpleTableMenu.VariableSizeContainerSlot slot) {
-					if (!slot.isActive() && slot.isExcessSlot() && slot.x >= 0) {
-						if (slot.getSlotIndex() < 27 || this.inventoryComponent.areSlotRowsFourToSixVisible()) {
+		if (this.inventoryComponent.isVisibleTotal())
+		{
+			for (int k = SimpleTableMenu.ACCESS_SLOT_START; k <= SimpleTableMenu.ACCESS_SLOT_END; k++)
+			{
+				if (this.menu.slots.get(k) instanceof SimpleTableMenu.VariableSizeContainerSlot slot)
+				{
+					if (! slot.isActive() && slot.isExcessSlot() && slot.x >= 0)
+					{
+						if (slot.getSlotIndex() < 27 || this.inventoryComponent.areSlotRowsFourToSixVisible())
+						{
 							graphics.pose().translate(0f, 0f, 101f);
-							if (this.excessSlotSprite == null) {
+							if (this.excessSlotSprite == null)
+							{
 								this.excessSlotSprite = this.minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(EXCESS_SLOT_BG);
 							}
 							graphics.blit(this.leftPos + slot.x, this.topPos + slot.y, 0/*z?*/, 16, 16, this.excessSlotSprite);
@@ -97,13 +107,15 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 	private static final ResourceLocation EXCESS_SLOT_BG = ResourceLocation.fromNamespaceAndPath(Constants.MODID, "gui/x_slot");
 
 	@Override
-	protected void renderBg(GuiGraphics graphics, float p_98475_, int p_98476_, int p_98477_) {
+	protected void renderBg(GuiGraphics graphics, float p_98475_, int p_98476_, int p_98477_)
+	{
 		int i = this.renderLeftPos;
 		int j = (this.height - this.imageHeight) / 2;
 		graphics.blit(this.getBackgroundImage(), i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 	}
 
-	public void renderBackground(GuiGraphics graphics, int p_297538_, int p_300104_, float p_298759_) {
+	public void renderBackground(GuiGraphics graphics, int p_297538_, int p_300104_, float p_298759_)
+	{
 		super.renderBackground(graphics, p_297538_, p_300104_, p_298759_); // renders gray shading in the back, than calls renderBg
 		if (this.inventoryComponent.isVisibleTotal())
 		{
@@ -123,8 +135,10 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 		{
 			if (this.minecraft.screen != null)
 			{
-				if (hasShiftDown()) {
-					if (tooltipCustomizationsFull == null) {
+				if (hasShiftDown())
+				{
+					if (tooltipCustomizationsFull == null)
+					{
 						String itemKey = BuiltInRegistries.ITEM.get(ResourceLocation.parse(CommonConfig.AccessCustomizationItem.get())).getDescriptionId();
 						String itemName = Language.getInstance().getOrDefault(itemKey);
 						tooltipCustomizationsFull = new ArrayList<>(15);
@@ -136,8 +150,10 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 					}
 					graphics.renderComponentTooltip(this.font, tooltipCustomizationsFull, mouseX, mouseY);
 				}
-				else {
-					if (tooltipCustomizationsBrief == null) {
+				else
+				{
+					if (tooltipCustomizationsBrief == null)
+					{
 						tooltipCustomizationsBrief = new ArrayList<>(2);
 						tooltipCustomizationsBrief.add(tooltipCustomizationsTitle);
 						tooltipCustomizationsBrief.add(tooltipCustomizationsShift);
@@ -174,27 +190,33 @@ public class SimpleTableCraftingScreen extends AbstractContainerScreen<SimpleTab
 
 
 
-	protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+	protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button)
+	{
 		boolean flag = mouseX < (double)left || mouseY < (double)top || mouseX >= (double)(left + this.imageWidth) || mouseY >= (double)(top + this.imageHeight);
 		return this.inventoryComponent.hasClickedOutside(mouseX, mouseY, this.leftPos, this.topPos, this.imageWidth + this.inventoryComponent.getWidth() + 1, this.imageHeight, button) && flag;
 	}
 
-	protected void slotClicked(Slot p_98469_, int p_98470_, int p_98471_, ClickType p_98472_) {
+	protected void slotClicked(Slot p_98469_, int p_98470_, int p_98471_, ClickType p_98472_)
+	{
 		super.slotClicked(p_98469_, p_98470_, p_98471_, p_98472_);
 		this.inventoryComponent.slotClicked(p_98469_);
 	}
 
-	public void removed() {
+	public void removed()
+	{
 		this.inventoryComponent.removed();
 		super.removed();
 	}
 
-	public boolean keyPressed(int p_97878_, int p_97879_, int p_97880_) {
-		if (p_97878_ == KEY_ESCAPE) {
+	public boolean keyPressed(int p_97878_, int p_97879_, int p_97880_)
+	{
+		if (p_97878_ == KEY_ESCAPE)
+		{
 			this.minecraft.player.closeContainer(); // esc
 		}
 		if (this.inventoryComponent.isVisibleTotal()
-				&& this.inventoryComponent.keyPressed(p_97878_, p_97879_, p_97880_)) {
+				&& this.inventoryComponent.keyPressed(p_97878_, p_97879_, p_97880_))
+		{
 			return true;
 		}
 		return super.keyPressed(p_97878_, p_97879_, p_97880_);

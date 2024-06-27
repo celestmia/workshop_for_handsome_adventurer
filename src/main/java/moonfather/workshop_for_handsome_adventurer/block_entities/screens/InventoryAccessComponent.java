@@ -61,6 +61,7 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
         if (this.visible)
         {
             this.initVisuals();
+            this.hideIfScreenTooNarrow();
         }
         this.parent.getMenu().registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_TABS_NEED_UPDATE, this::onTabListChangedOnServer);
         this.parent.getMenu().registerClientHandlerForDataSlot(SimpleTableDataSlots.DATA_SLOT_UPPER_CONTAINER_TRUE_SIZE, this::onContainerSizeChangedOnServer);
@@ -68,11 +69,21 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
 
 
 
+    private void hideIfScreenTooNarrow()
+    {
+        // sane condition is   this.isVisibleAccordingToMenuData() != this.isVisibleTotal()
+        // ...and that will work on resize but not on first start; both are false first time.
+        // ...instead of accounting for that, i'll just go unconditionally.
+        this.parent.getMenu().setClientFlagScreenTooNarrow(this.widthTooNarrow2);
+        this.parent.getMenu().updateAccessSlotsOnClient();
+    }
+
     public void initVisuals()
     {
         this.xOffset = (this.parent.width - this.parent.getImageWidth() - PANEL_WIDTH) / 2;
         int bottomY = (this.parent.height - parent.getYSize()) / 2 + PANEL_HEIGHT_WITH_TABS;
-        if (this.renameBox == null) {
+        if (this.renameBox == null)
+        {
             this.renameBox = new SlightlyNicerEditBox(this.parent.getMinecraft().font, this.xOffset, bottomY - 18, 120, 9 + 5, Component.literal("Input box for new name for container"));
             this.renameBox.setMaxLength(50);
             this.renameBox.setBordered(false);  // draw bg myself because some dumbass hardcoded black as background
@@ -282,6 +293,7 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
         if (changeTab) {
             this.tabChanged(this.tabButtons.get(0), true); // just to update visuals
         }
+        this.hideIfScreenTooNarrow();
     }
 
     public void tick()
@@ -328,8 +340,6 @@ public class InventoryAccessComponent implements Renderable, GuiEventListener, N
     }
 
     ////////////////////////////////////////
-
-    private int lastInventoryAccessRange = 0;
 
     private void updateWidth(boolean widthTooNarrow) {
         if (this.widthTooNarrow2 != widthTooNarrow) {

@@ -71,7 +71,7 @@ public class SimpleTableMenu extends AbstractContainerMenu
 	private final Container tabElements = new SimpleContainer(TAB_SMUGGLING_CONTAINER_SIZE); // magic to transfer to client
 	private Container chestSlots = null;
 	protected boolean initialLoading = true;
-
+	private boolean clientFlagScreenTooNarrow = false; // only set in client-side menu. controls access slots being disabled.
 
 	public SimpleTableMenu(int containerId, Inventory inventory, FriendlyByteBuf friendlyByteBuf)
 	{
@@ -655,13 +655,16 @@ public class SimpleTableMenu extends AbstractContainerMenu
 		Optional<Boolean> haveContainer = this.access.evaluate( (level, pos) -> this.inventoryAccessHelper.tryInitializeInventoryAccess(level, this.player, index) );
 		if (haveContainer.isPresent() && haveContainer.get())
 		{
-			this.chestSlots = this.inventoryAccessHelper.chosenContainer;
-			this.setUpperContainerTrueSize(this.inventoryAccessHelper.chosenContainerTrueSize);
-			for (int i = ACCESS_SLOT_START; i <= ACCESS_SLOT_END; i++)
+			if (! this.chestSlots.equals(this.inventoryAccessHelper.chosenContainer))
 			{
-				this.getSlot(i).container = this.chestSlots;
+				this.chestSlots = this.inventoryAccessHelper.chosenContainer;
+				this.setUpperContainerTrueSize(this.inventoryAccessHelper.chosenContainerTrueSize);
+				for (int i = ACCESS_SLOT_START; i <= ACCESS_SLOT_END; i++)
+				{
+					this.getSlot(i).container = this.chestSlots;
+				}
+				this.initExcessSlotMap();
 			}
-			this.initExcessSlotMap();
 		}
 		else
 		{
@@ -779,26 +782,39 @@ public class SimpleTableMenu extends AbstractContainerMenu
 
 	/////////////////////////////////////////////////////////////////
 
-	public void updateAccessSlotsOnClient()	{
-		if (this.initialLoading == false && this.showInventoryAccess() && this.chestSlots.getMaxStackSize() == DisabledContainer.MARKER_FOR_DISABLED)
+	public void updateAccessSlotsOnClient()
+	{
+		if (! this.initialLoading)
 		{
-			if (this.chestSlots.getMaxStackSize() == DisabledContainer.MARKER_FOR_DISABLED)
+			if (this.clientFlagScreenTooNarrow && this.chestSlots.getMaxStackSize() != DisabledContainer.MARKER_FOR_DISABLED)
 			{
-				//happens on client
-				((DisabledContainer)this.chestSlots).disabled = false;
+				if (this.chestSlots instanceof DisabledContainer dc)
+				{
+					dc.disabled = true; // happens on client. "narrow" flag can't be true on server.
+				}
 			}
-			PacketSender.sendTabChangeToServer(0);
-		}
-		// and again, we hide/show access slots here (other direction)
-		if (this.initialLoading == false && ! this.showInventoryAccess() && this.chestSlots.getMaxStackSize() != DisabledContainer.MARKER_FOR_DISABLED)
-		{
-			if (this.selectedTab != 0) { this.changeTabTo(0); }
-			if (this.chestSlots instanceof DisabledContainer && this.chestSlots.getMaxStackSize() != DisabledContainer.MARKER_FOR_DISABLED)
+			if (this.showInventoryAccess() && this.chestSlots.getMaxStackSize() == DisabledContainer.MARKER_FOR_DISABLED && ! this.clientFlagScreenTooNarrow)
 			{
-				//happens on client
-				((DisabledContainer)this.chestSlots).disabled = true;
+				if (this.chestSlots instanceof DisabledContainer dc)
+				{
+					dc.disabled = false; // happens on client.
+				}
+				// no longer calling sendTabChangeToServer(0), no reason to, plus some changes would require us tob update the screen too.
 			}
-			this.sendAllDataToRemote();
+			// and again, we hide/show access slots here (other direction)
+			if (! this.showInventoryAccess() && this.chestSlots.getMaxStackSize() != DisabledContainer.MARKER_FOR_DISABLED)
+			{
+				if (this.selectedTab != 0)
+				{
+					this.changeTabTo(0);
+				}
+				if (this.chestSlots instanceof DisabledContainer && this.chestSlots.getMaxStackSize() != DisabledContainer.MARKER_FOR_DISABLED)
+				{
+					//happens on client
+					((DisabledContainer) this.chestSlots).disabled = true;
+				}
+				this.sendAllDataToRemote();
+			}
 		}
 		// range change - again this worked, but apparently we're "fixing" everything
 		int range = this.getInventoryAccessRange();
@@ -808,6 +824,8 @@ public class SimpleTableMenu extends AbstractContainerMenu
 		}
 		this.lastInventoryAccessRange = range; // separate value from one on server, but we'll use the same variable. client-copy is only used within this method, below this line.
 	}
+
+	public void setClientFlagScreenTooNarrow(boolean value) { this.clientFlagScreenTooNarrow = value; }
 
 	/////////////////////////////////////////////////////////////////
 

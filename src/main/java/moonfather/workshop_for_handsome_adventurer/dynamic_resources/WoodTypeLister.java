@@ -40,6 +40,11 @@ public class WoodTypeLister
             ids.add("bamboo");
             woodToHostMap.put("bamboo", "minecraft");
 
+            ids.add("crimson");
+            woodToHostMap.put("crimson", "minecraft");
+            ids.add("warped");
+            woodToHostMap.put("warped", "minecraft");
+
             // ready:
             final String mc = "minecraft";
             final String planks = "_planks";

@@ -30,7 +30,7 @@ public class DynamicAssetCommonConfig
                 .define("Blacklist", "vinery:cherry");
         stripped_log_substitution_list_for_recipes = BUILDER
                 .comment("For wood types that do not have stripped logs, you can specify table top block here. If you do not, we are skipping that wood type.")
-                .define("Stripped log substitution list for recipes", "bamboo=minecraft:stripped_bamboo_block, treated_wood_horizontal=minecraft:polished_blackstone,  embur=byg:stripped_embur_pedu,  sythian=byg:stripped_sythian_stem, bulbis=minecraft:smooth_stone");
+                .define("Stripped log substitution list for recipes", "bamboo=minecraft:stripped_bamboo_block, treated_wood_horizontal=minecraft:polished_blackstone,  embur=byg:stripped_embur_pedu,  sythian=byg:stripped_sythian_stem, bulbis=minecraft:smooth_stone, crimson=minecraft:stripped_crimson_stem, warped=minecraft:stripped_warped_stem");
         blocks_with_dumbass_names = BUILDER
                 .comment("This is a list of blocks that do not follow usual naming scheme. Set consists of planks, slab and log, separated by slashes. Separate all sets with comma. You can use stripped_log_substitution together with this. Example is IE's treated wood as it has no logs.")
                 .define("Blocks with dumbass names", "immersiveengineering:treated_wood_horizontal/slab_treated_wood_horizontal/no_log_for_this_one, growthcraft_apples:apple_plank/apple_plank_slab/apple_wood_log_stripped,   vinery:cherry_planks/cherry_slab/stripped_cherry_log");

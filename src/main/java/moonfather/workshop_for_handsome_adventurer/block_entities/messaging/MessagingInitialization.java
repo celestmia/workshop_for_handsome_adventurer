@@ -13,5 +13,6 @@ public class MessagingInitialization
         registrar.playToServer(ClientRequestMessage.TYPE, ClientRequestMessage.STREAM_CODEC, PayloadHandler::handleMessage);
         registrar.playToServer(GridChangeMessage.TYPE, GridChangeMessage.STREAM_CODEC, PayloadHandler::handleMessage);
         registrar.playToServer(TabChangeMessage.TYPE, TabChangeMessage.STREAM_CODEC, PayloadHandler::handleMessage);
+        registrar.playToServer(CraftingUpdateRequestMessage.TYPE, CraftingUpdateRequestMessage.STREAM_CODEC, PayloadHandler::handleMessage);
     }
 }

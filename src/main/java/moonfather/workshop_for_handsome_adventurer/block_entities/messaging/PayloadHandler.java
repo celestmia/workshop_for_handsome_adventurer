@@ -79,4 +79,20 @@ public class PayloadHandler
             context.disconnect(Component.literal("Networking error in NI mod, msg4:  \n" + e.getMessage()));
         }
     }
+
+    public static void handleMessage(final CraftingUpdateRequestMessage message, final IPayloadContext context)
+    {
+        try
+        {
+            if (context.player() instanceof ServerPlayer sp         // the client that sent this packet
+                    && sp.containerMenu instanceof SimpleTableMenu menu)
+            {
+                menu.handleCraftingUpdateRequest(message.value());
+            }
+        }
+        catch (Exception e)
+        {
+            context.disconnect(Component.literal("Networking error in NI mod, msg4:  \n" + e.getMessage()));
+        }
+    }
 }

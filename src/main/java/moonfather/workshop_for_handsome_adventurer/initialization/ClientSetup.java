@@ -4,9 +4,11 @@ import moonfather.workshop_for_handsome_adventurer.block_entities.screens.DualTa
 import moonfather.workshop_for_handsome_adventurer.block_entities.screens.SimpleTableCraftingScreen;
 import moonfather.workshop_for_handsome_adventurer.block_entities.renderers.*;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.FinderEvents;
+import moonfather.workshop_for_handsome_adventurer.integration.PolymorphAccessorClient;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -22,6 +24,11 @@ public class ClientSetup
 	{
 		//ItemBlockRenderTypes.setRenderLayer(Registration.SIMPLE_TABLE.get(), RenderType.cutoutMipped()); // apparently unnecessary.
 		//BlockEntityRenderers.register(Registration.TOOL_RACK.get(), ToolRackTESR::new); //maybe this would be ok too
+
+		if (ModList.get().isLoaded("polymorph"))
+		{
+			PolymorphAccessorClient.register();
+		}
 	}
 
 

@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +16,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModList;
 
 import javax.annotation.Nullable;
@@ -125,5 +128,56 @@ public class DualToolRack extends ToolRack
     public PushReaction getPistonPushReaction(BlockState state)
     {
         return PushReaction.DESTROY;
+    }
+
+
+    ///////////////////////////////////////////////////////
+
+    private static final VoxelShape SHAPE_PLANK1N = Block.box(1.0D, 1.0D, 0.0D, 15.0D, 16.0D, 1.0D);
+    private static final VoxelShape SHAPE_PLANK1E = Block.box(15.0D, 1.0D, 1.0D, 16.0D, 16.0D, 15.0D);
+    private static final VoxelShape SHAPE_PLANK1S = Block.box(1.0D, 1.0D, 15.0D, 15.0D, 16.0D, 16.0D);
+    private static final VoxelShape SHAPE_PLANK1W = Block.box(0.0D, 1.0D, 1.0D, 1.0D, 16.0D, 15.0D);
+    private static final VoxelShape SHAPE_PLANK2N = Block.box(1.0D, 0.0D, 0.0D, 15.0D, 15.0D, 1.0D);
+    private static final VoxelShape SHAPE_PLANK2E = Block.box(15.0D, 0.0D, 1.0D, 16.0D, 15.0D, 15.0D);
+    private static final VoxelShape SHAPE_PLANK2S = Block.box(1.0D, 0.0D, 15.0D, 15.0D, 15.0D, 16.0D);
+    private static final VoxelShape SHAPE_PLANK2W = Block.box(0.0D, 0.0D, 1.0D, 1.0D, 15.0D, 15.0D);
+
+
+
+    @Override
+    public VoxelShape getOcclusionShape(BlockState state, BlockGetter p_60579_, BlockPos p_60580_)
+    {
+        return resolveShape(state.getValue(ToolRack.FACING), state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF));
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter p_60582_, BlockPos p_60583_)
+    {
+        return resolveShape(state.getValue(ToolRack.FACING), state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_)
+    {
+        return resolveShape(state.getValue(ToolRack.FACING), state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF));
+    }
+
+    @Override
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter p_60548_, BlockPos p_60549_)
+    {
+        return resolveShape(state.getValue(ToolRack.FACING), state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF));
+    }
+
+    private static VoxelShape resolveShape(Direction direction, DoubleBlockHalf half)
+    {
+        if (direction.equals(Direction.NORTH) && half.equals(DoubleBlockHalf.LOWER)) return SHAPE_PLANK1N;
+        if (direction.equals(Direction.WEST) && half.equals(DoubleBlockHalf.LOWER)) return SHAPE_PLANK1W;
+        if (direction.equals(Direction.EAST) && half.equals(DoubleBlockHalf.LOWER)) return SHAPE_PLANK1E;
+        if (direction.equals(Direction.SOUTH) && half.equals(DoubleBlockHalf.LOWER)) return SHAPE_PLANK1S;
+        if (direction.equals(Direction.NORTH) && half.equals(DoubleBlockHalf.UPPER)) return SHAPE_PLANK2N;
+        if (direction.equals(Direction.WEST) && half.equals(DoubleBlockHalf.UPPER)) return SHAPE_PLANK2W;
+        if (direction.equals(Direction.EAST) && half.equals(DoubleBlockHalf.UPPER)) return SHAPE_PLANK2E;
+        if (direction.equals(Direction.SOUTH) && half.equals(DoubleBlockHalf.UPPER)) return SHAPE_PLANK2S;
+        return null;
     }
 }

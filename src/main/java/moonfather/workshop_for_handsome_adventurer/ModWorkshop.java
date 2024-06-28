@@ -9,6 +9,7 @@ import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.Dyna
 import moonfather.workshop_for_handsome_adventurer.initialization.CommonSetup;
 import moonfather.workshop_for_handsome_adventurer.initialization.DynamicContentRegistration;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
+import moonfather.workshop_for_handsome_adventurer.integration.CarryOnBlacklisting;
 import moonfather.workshop_for_handsome_adventurer.integration.TOPRegistration;
 import moonfather.workshop_for_handsome_adventurer.other.CreativeTab;
 import net.neoforged.bus.api.EventPriority;
@@ -34,12 +35,9 @@ public class ModWorkshop
     //////////////
     // creative tab
     // bamboo simple table model ?
-    // dag is disabled at two locations
     // try master off
     // instant config, do net sync
     // missing mappings.store all wood on registration, read on startup, loop through read types and see which arent in lister, report aliases on common setup or earlier
-    // getTexturePathInternal has two paths, one is wrong
-    // bug potion with empty off
     public ModWorkshop(IEventBus modBus, ModContainer modContainer)
     {
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
@@ -48,30 +46,11 @@ public class ModWorkshop
         modContainer.registerConfig(ModConfig.Type.STARTUP, DynamicAssetCommonConfig.SPEC, Constants.MODID + "-special-server.toml");
         Registration.init(modBus);
         modBus.addListener(CommonSetup::init);
-        modBus.addListener(this::enqueueIMC);
+        modBus.addListener(CarryOnBlacklisting::enqueueIMC);
         modBus.addListener(CreativeTab::onCreativeTabPopulation);
         modBus.addListener(FinderEvents::addServerPack);
         modBus.addListener(MessagingInitialization::register);
         NeoForge.EVENT_BUS.addListener(PotionShelf::onRightClickBlock);
         modBus.addListener(EventPriority.LOWEST, DynamicContentRegistration::handleRegistryEvent);
     }
-
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-        for (String woodType: Registration.woodTypes)
-        {
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_double_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_framed_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":tool_rack_pframed_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_left_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_bottom_right_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_left_" + woodType);
-            InterModComms.sendTo("carryon", "blacklistBlock", () -> Constants.MODID + ":dual_table_top_right_" + woodType);
-        }
-        //System.out.println("test imc " + Constants.MODID + ":dual_table_bottom_left_" + "oak   " + ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Constants.MODID + ":dual_table_bottom_left_" + "oak")).getCloneItemStack(null, null, null, null, null));
-        if (ModList.get().isLoaded("theoneprobe"))
-        {
-            InterModComms.sendTo("theoneprobe", "getTheOneProbe", TOPRegistration::instance);
-        }
-    } 
 }

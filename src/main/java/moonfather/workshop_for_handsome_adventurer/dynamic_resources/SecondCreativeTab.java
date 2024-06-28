@@ -1,9 +1,11 @@
 package moonfather.workshop_for_handsome_adventurer.dynamic_resources;
 
+import moonfather.workshop_for_handsome_adventurer.Constants;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetClientConfig;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetCommonConfig;
 import moonfather.workshop_for_handsome_adventurer.initialization.Registration;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -38,6 +40,7 @@ public class SecondCreativeTab
                                  .icon( ()-> new ItemStack(SecondCreativeTab.items_table1.get(iconIndex)) )
                                  .title(Component.translatable("itemGroup.workshop_for_handsome_adventurer"))
                                  .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
+                                 .withTabsBefore(ResourceLocation.fromNamespaceAndPath(Constants.MODID,"tab"))
                                  .build();
         }
         return tab;
@@ -46,9 +49,16 @@ public class SecondCreativeTab
 
     //////////////////////////////////////////////////////
 
+    public static boolean usingSecondTab()
+    {
+        return SecondCreativeTab.items_table1.size() >= DynamicAssetClientConfig.MinimumNumberOfSetsForSeparateCreativeTab.getAsInt();
+    }
+
+    //////////////////////////////////////////////////////
+
     public static void onCreativeTabPopulation(BuildCreativeModeTabContentsEvent event)
     {
-        if (DynamicAssetCommonConfig.masterLeverOn() && (SecondCreativeTab.items_table1.size() >= DynamicAssetClientConfig.MinimumNumberOfSetsForSeparateCreativeTab.getAsInt()) && event.getTab().equals(SecondCreativeTab.getTab()))
+        if (DynamicAssetCommonConfig.masterLeverOn() && usingSecondTab() && event.getTab().equals(SecondCreativeTab.getTab()))
         {
             int i = 0;
             for (Item item : SecondCreativeTab.items_table1)

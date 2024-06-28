@@ -15,7 +15,5 @@ public class CommonSetup
 				e.printStackTrace();
 			}
 		}
-
-		MissingMappingsHandler.prepareMappings();
 	}
 }

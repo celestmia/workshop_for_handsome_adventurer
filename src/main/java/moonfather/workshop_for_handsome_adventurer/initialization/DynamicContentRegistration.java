@@ -2,8 +2,10 @@ package moonfather.workshop_for_handsome_adventurer.initialization;
 
 import moonfather.workshop_for_handsome_adventurer.Constants;
 import moonfather.workshop_for_handsome_adventurer.blocks.*;
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.MissingMappingsHandler;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.SecondCreativeTab;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.WoodTypeLister;
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetClientConfig;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetCommonConfig;
 import moonfather.workshop_for_handsome_adventurer.items.BlockItemEx;
 import moonfather.workshop_for_handsome_adventurer.items.WorkstationPlacerItem;
@@ -31,10 +33,12 @@ public class DynamicContentRegistration
             {
                 DynamicContentRegistration.registerBlocksForThirdPartyWood(event);
             }
+            MissingMappingsHandler.prepareMappings();
+            MissingMappingsHandler.storeForNextTime();
         }
         if (event.getRegistryKey().equals(Registries.CREATIVE_MODE_TAB))
         {
-            if (DynamicAssetCommonConfig.masterLeverOn() /*&& DynamicAssetConfig.separateCreativeTab()*/)
+            if (DynamicAssetCommonConfig.masterLeverOn() && SecondCreativeTab.usingSecondTab())
             {
                 event.register(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(Constants.MODID, "tab2"), SecondCreativeTab::getTab);
             }

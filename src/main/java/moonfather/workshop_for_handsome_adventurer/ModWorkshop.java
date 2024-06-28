@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import moonfather.workshop_for_handsome_adventurer.block_entities.messaging.MessagingInitialization;
 import moonfather.workshop_for_handsome_adventurer.blocks.PotionShelf;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.FinderEvents;
+import moonfather.workshop_for_handsome_adventurer.dynamic_resources.MissingMappingsHandler;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetClientConfig;
 import moonfather.workshop_for_handsome_adventurer.dynamic_resources.config.DynamicAssetCommonConfig;
 import moonfather.workshop_for_handsome_adventurer.initialization.CommonSetup;
@@ -42,8 +43,8 @@ public class ModWorkshop
     {
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.STARTUP, DynamicAssetClientConfig.SPEC, Constants.MODID + "-special-client.toml");
-        modContainer.registerConfig(ModConfig.Type.STARTUP, DynamicAssetCommonConfig.SPEC, Constants.MODID + "-special-server.toml");
+        modContainer.registerConfig(ModConfig.Type.STARTUP, DynamicAssetClientConfig.SPEC, "workshop/special-client.toml");
+        modContainer.registerConfig(ModConfig.Type.STARTUP, DynamicAssetCommonConfig.SPEC, "workshop/special-server.toml");
         Registration.init(modBus);
         modBus.addListener(CommonSetup::init);
         modBus.addListener(CarryOnBlacklisting::enqueueIMC);
@@ -52,5 +53,6 @@ public class ModWorkshop
         modBus.addListener(MessagingInitialization::register);
         NeoForge.EVENT_BUS.addListener(PotionShelf::onRightClickBlock);
         modBus.addListener(EventPriority.LOWEST, DynamicContentRegistration::handleRegistryEvent);
+        MissingMappingsHandler.read();
     }
 }

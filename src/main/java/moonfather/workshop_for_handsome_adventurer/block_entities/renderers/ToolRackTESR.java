@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.joml.Quaternionf;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -115,14 +115,14 @@ public class ToolRackTESR implements BlockEntityRenderer<ToolRackBlockEntity>
 			matrixStack.mulPose(XMinus90);  // 1.19.4   Vector3f.XP.rotationDegrees(-90.0F)
 			matrixStack.mulPose(YPlus180);  // 1.19.4   Vector3f.YP.rotationDegrees(180.0F)
 
-			if (itemStack.getItem().canPerformAction(itemStack, ToolActions.SHIELD_BLOCK))
+			if (itemStack.getItem().canPerformAction(itemStack, ItemAbilities.SHIELD_BLOCK))
 			{
 				matrixStack.translate(-0.00, -0.10, 0.14);
 				matrixStack.scale(1.75f, 1.60f, 1.75f);
 				//matrixStack.translate(-0.25, 0, 0.16);
 				//matrixStack.scale(2, 2, 2);
 			}
-			else if (itemStack.getItem().canPerformAction(itemStack, ToolActions.SWORD_SWEEP) || itemStack.getItem() instanceof SwordItem) //ModularBladedItem
+			else if (itemStack.getItem().canPerformAction(itemStack, ItemAbilities.SWORD_SWEEP) || itemStack.getItem() instanceof SwordItem) //ModularBladedItem
 			{
 				matrixStack.translate(0, -0.2, 0);
 				matrixStack.mulPose(ZPlus135);  // 1.19.4      Vector3f.ZP.rotationDegrees(135.0F)

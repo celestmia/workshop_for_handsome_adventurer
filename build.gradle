@@ -128,15 +128,15 @@ configurations {
 }
 
 dependencies {
-	runtimeOnly "curse.maven:superflat-world-no-slimes-344185:5425631"
-	runtimeOnly "curse.maven:collective-342584:5451069"
+	//runtimeOnly "curse.maven:superflat-world-no-slimes-344185:5425631"
+	//runtimeOnly "curse.maven:collective-342584:5482423"
 
     compileOnly "curse.maven:wthit-forge-455982:5447978"
     //runtimeOnly "curse.maven:badpackets-615134:5430629"
     implementation "curse.maven:jade-324717:5444008"
     compileOnly "curse.maven:the-one-probe-245211:5431197"
 
-    implementation "curse.maven:jei-238222:5447427"
+    implementation "curse.maven:jei-238222:5466551"
     compileOnly "curse.maven:emi-580555:5436759"
     compileOnly "curse.maven:roughly-enough-items-310111:5435024"
 	//runtimeOnly "curse.maven:architectury-api-419699:5424664"
@@ -154,7 +154,7 @@ dependencies {
 
     compileOnly "curse.maven:dynamic-asset-generator-577096:5471770"
     //implementation "curse.maven:dynamic-asset-generator-577096:5471770"
-    runtimeOnly "curse.maven:biomes-o-plenty-220318:5437861"
+    runtimeOnly "curse.maven:biomes-o-plenty-220318:5476207"
     runtimeOnly "curse.maven:terrablender-neoforge-940057:5429865"
     runtimeOnly "curse.maven:glitchcore-955399:5429863"
 }

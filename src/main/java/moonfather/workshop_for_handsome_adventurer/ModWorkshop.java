@@ -38,7 +38,6 @@ public class ModWorkshop
     // bamboo simple table model ?
     // try master off
     // instant config, do net sync
-    // missing mappings.store all wood on registration, read on startup, loop through read types and see which arent in lister, report aliases on common setup or earlier
     public ModWorkshop(IEventBus modBus, ModContainer modContainer)
     {
         modContainer.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);

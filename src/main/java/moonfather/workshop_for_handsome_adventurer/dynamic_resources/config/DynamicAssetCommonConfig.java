@@ -22,7 +22,7 @@ public class DynamicAssetCommonConfig
         BUILDER.push("Master switch");
         generate_blocks_for_mod_added_woods = BUILDER
                 .comment("Unicorn-magic-powered system that automatically adds tables/racks/shelves for all wood types in the game (yes, modded ones too, that is the point of this system). If you turn this off (does not work? please report!), workshop blocks will only be added in vanilla wood types.  Option requires game restart. Synchronization untested.")
-                .define("Generate blocks for mod added woods", true);
+                .define("Generate blocks for mod-added woods", true);
         BUILDER.pop();
         BUILDER.push("Other");
         blacklist = BUILDER

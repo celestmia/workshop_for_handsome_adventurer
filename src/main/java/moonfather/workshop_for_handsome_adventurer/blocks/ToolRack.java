@@ -40,7 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -302,7 +302,7 @@ public class ToolRack extends Block implements EntityBlock
             itemInOffHand.shrink(1);
             player.playSound(SoundEvents.WOOD_PLACE, 0.5f, 0.7f);
         }
-        else if (! existing.isEmpty() && itemInMainHand.isEmpty() && itemInOffHand.isEmpty() && existing.canPerformAction(ToolActions.SHIELD_BLOCK))
+        else if (! existing.isEmpty() && itemInMainHand.isEmpty() && itemInOffHand.isEmpty() && existing.canPerformAction(ItemAbilities.SHIELD_BLOCK))
         {
             //System.out.println("~~~~~TAKEN SHIELD");
             //player.addItem(existing);
@@ -320,7 +320,7 @@ public class ToolRack extends Block implements EntityBlock
         else if (! existing.isEmpty() && ! itemInMainHand.isEmpty() && doOffhand && itemInOffHand.isEmpty())
         {
             //System.out.println("~~~~~TAKEN WITH OFFHAND");
-            if (! itemInMainHand.canPerformAction(ToolActions.SHIELD_BLOCK))
+            if (! itemInMainHand.canPerformAction(ItemAbilities.SHIELD_BLOCK))
             {
                 player.setItemInHand(InteractionHand.OFF_HAND, existing); // normal
             }

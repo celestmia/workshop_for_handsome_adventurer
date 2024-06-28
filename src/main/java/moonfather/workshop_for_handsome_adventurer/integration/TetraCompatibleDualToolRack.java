@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ItemAbilities;
 //import se.mickelus.tetra.blocks.IToolProviderBlock;
 
 
@@ -27,22 +27,22 @@ public class TetraCompatibleDualToolRack extends DualToolRack /*implements ITool
         return true;
     }
 
-    public Collection<ToolAction> getTools(Level world, BlockPos pos, BlockState blockState)
+    public Collection<ItemAbility> getTools(Level world, BlockPos pos, BlockState blockState)
     {
         return TetraCompatibleToolRackHelper.getTools(world, pos, this.itemCount);
     }
 
-    public int getToolLevel(Level world, BlockPos pos, BlockState blockState, ToolAction toolAction)
+    public int getToolLevel(Level world, BlockPos pos, BlockState blockState, ItemAbility toolAction)
     {
         return TetraCompatibleToolRackHelper.getToolLevel(world, pos, this.itemCount, toolAction);
     }
 
-    public ItemStack onCraftConsumeTool(Level world, BlockPos pos, BlockState blockState, ItemStack targetStack, String slotArg, boolean isReplacing, Player player, ToolAction requiredTool, int requiredLevel, boolean consumeResources)
+    public ItemStack onCraftConsumeTool(Level world, BlockPos pos, BlockState blockState, ItemStack targetStack, String slotArg, boolean isReplacing, Player player, ItemAbility requiredTool, int requiredLevel, boolean consumeResources)
     {
         return TetraCompatibleToolRackHelper.onCraftConsumeTool(world, pos, this.itemCount, targetStack, player, requiredTool, requiredLevel, consumeResources);
     }
 
-    public ItemStack onActionConsumeTool(Level world, BlockPos pos, BlockState blockState, ItemStack targetStack, Player player, ToolAction requiredTool, int requiredLevel, boolean consumeResources)
+    public ItemStack onActionConsumeTool(Level world, BlockPos pos, BlockState blockState, ItemStack targetStack, Player player, ItemAbilities requiredTool, int requiredLevel, boolean consumeResources)
     {
         return TetraCompatibleToolRackHelper.onActionConsumeTool(world, pos, this.itemCount, targetStack, player, requiredTool, requiredLevel, consumeResources);
     }

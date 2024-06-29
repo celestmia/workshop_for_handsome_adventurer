@@ -34,7 +34,6 @@ public class ModWorkshop
     // bug: toolrack shows axe that is in my hand until i put it into another slot  CAN'T REPRODUCE
     // todo: test carryon
     //////////////
-    // creative tab
     // bamboo simple table model ?
     // try master off
     // instant config, do net sync

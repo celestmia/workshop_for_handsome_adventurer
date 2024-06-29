@@ -33,8 +33,10 @@ public class WoodTypeLister
     {
         if (ids == null)
         {
-            Stopwatch s = Stopwatch.createStarted();
             ids = new ArrayList<>();
+            idsWithSpecials = new ArrayList<>(ids);
+            if (! DynamicAssetCommonConfig.masterLeverOn()) { return; }
+            Stopwatch s = Stopwatch.createStarted();
             ids.add("acacia");
             woodToHostMap.put("acacia", "minecraft");
             ids.add("bamboo");

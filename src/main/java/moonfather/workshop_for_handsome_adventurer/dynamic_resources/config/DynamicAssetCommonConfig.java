@@ -42,7 +42,7 @@ public class DynamicAssetCommonConfig
 
     public static boolean masterLeverOn()
     {
-        return true;/*generate_blocks_for_mod_added_woods.isTrue();*/
+        return generate_blocks_for_mod_added_woods == null || generate_blocks_for_mod_added_woods.isTrue();
     }
 
     public static Collection<WoodTypeCommonManager.WoodSet> getWoodSetsWithDumbassNames()

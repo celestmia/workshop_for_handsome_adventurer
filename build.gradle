@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '0.1.99'
+    id 'net.neoforged.moddev' version '0.1.112'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -146,8 +146,7 @@ dependencies {
     compileOnly "curse.maven:crafting-tweaks-233071:5426925"
 	//runtimeOnly "curse.maven:balm-531761:5442096"
 	
-	// polymorph is not put for 1.21 yet, using 1.20.6
-	compileOnly "curse.maven:polymorph-388800:5453172"
+    implementation "curse.maven:polymorph-388800:5480541"
 	
 	// curios is not put for 1.21 yet, using 1.20.6
 	compileOnly "curse.maven:curios-309927:5443145"

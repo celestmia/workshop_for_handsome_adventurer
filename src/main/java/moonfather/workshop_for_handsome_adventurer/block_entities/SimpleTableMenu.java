@@ -172,8 +172,7 @@ public class SimpleTableMenu extends AbstractContainerMenu
 			CraftingInput craftinginput = craftingContainer.asCraftInput();
 			if (ModList.get().isLoaded("polymorph"))
 			{
-				//optional = PolymorphAccessorServer.getRecipe(menu, craftingContainer, level, player);
-				recipeHolder = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftinginput, level);
+				recipeHolder = PolymorphAccessorServer.getRecipe(menu, craftingContainer, level, player);
 			}
 			else
 			{

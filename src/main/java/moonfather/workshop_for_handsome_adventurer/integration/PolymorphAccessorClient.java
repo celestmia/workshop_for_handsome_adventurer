@@ -1,8 +1,9 @@
 package moonfather.workshop_for_handsome_adventurer.integration;
 
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
-import com.illusivesoulworks.polymorph.client.recipe.RecipesWidget;
-import com.illusivesoulworks.polymorph.client.recipe.widget.PlayerRecipesWidget;
+import com.illusivesoulworks.polymorph.api.client.PolymorphWidgets;
+import com.illusivesoulworks.polymorph.api.client.widgets.PlayerRecipesWidget;
+import com.illusivesoulworks.polymorph.client.RecipesWidget;
 import moonfather.workshop_for_handsome_adventurer.block_entities.SimpleTableMenu;
 import moonfather.workshop_for_handsome_adventurer.block_entities.messaging.PacketSender;
 import moonfather.workshop_for_handsome_adventurer.block_entities.screens.SimpleTableCraftingScreen;
@@ -27,7 +28,7 @@ public class PolymorphAccessorClient
 
     public static void register()
     {
-        PolymorphApi.client().registerWidget(
+        PolymorphWidgets.getInstance().registerWidget(
                 containerScreen ->
                 {
                     if (containerScreen instanceof SimpleTableCraftingScreen)

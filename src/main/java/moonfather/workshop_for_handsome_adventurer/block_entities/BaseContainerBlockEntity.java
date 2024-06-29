@@ -84,7 +84,7 @@ public class BaseContainerBlockEntity extends BlockEntity
             }
             else
             {
-                if (compoundTag.contains("item" + i)) { compoundTag.remove("item" + i); }
+                compoundTag.put("item" + i, new CompoundTag());
             }
         }
         return compoundTag;

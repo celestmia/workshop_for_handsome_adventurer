@@ -33,9 +33,8 @@ public class ModWorkshop
 
     // bug: toolrack shows axe that is in my hand until i put it into another slot  CAN'T REPRODUCE
     // todo: test carryon
-    //////////////
+    // todo: polymorph is bypassed in one class
     // bamboo simple table model ?
-    // try master off
     // instant config, do net sync
     public ModWorkshop(IEventBus modBus, ModContainer modContainer)
     {

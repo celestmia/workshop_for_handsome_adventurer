@@ -147,11 +147,22 @@ public class ToolRack extends Block implements EntityBlock
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context)
 	{
+		// CM MOD START - Allow placement when clicking down or up based on player's facing.
+//		if (context.getClickedFace() == Direction.DOWN || context.getClickedFace() == Direction.UP)
+//		{
+//			return null;
+//		}
+//		BlockState result = this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+		BlockState result;
 		if (context.getClickedFace() == Direction.DOWN || context.getClickedFace() == Direction.UP)
 		{
-			return null;
+			result = this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
 		}
-		BlockState result = this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+		else
+		{
+			result = this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+		}
+		// CM MOD END
 		if (this.canSurvive(result, context.getLevel(), context.getClickedPos()))
 		{
 			return result;
@@ -165,6 +176,12 @@ public class ToolRack extends Block implements EntityBlock
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos)
 	{
+		// CM MOD START - Make Tool Rack (and subclasses) require no support.
+		if (true) {
+			return true;
+		}
+		// CM MOD END
+
 		Direction d = state.getValue(FACING).getOpposite();
 		BlockPos target = pos.relative(d.getOpposite());
 		return world.getBlockState(target).isFaceSturdy(world, target, d);
